@@ -1,0 +1,28 @@
+{% assign array = product.metafields.custom.related_categories.value %}
+{%- if array -%}
+  <div class="grid_" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+    <ul class="w-full flex flex-wrap gap-2 justify-center mt-10 col-span-full col-start-1 text-12 text-center">
+      {% for item in array %}
+      <li><a href="/collections/{{ item.handle | handleize }}" class="block bg-white py-0.5 px-1.5 rounded whitespace-nowrap"><span class="text-link">{{ item.title }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+{%- endif -%}
+
+
+{% schema %}
+{
+  "name": "t:sections.pdp-tags.name",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+
+  ]
+}
+{% endschema %}

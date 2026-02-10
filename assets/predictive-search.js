@@ -16,7 +16,7 @@ class PredictiveSearch extends SearchForm {
     this.input.form.addEventListener('submit', this.onFormSubmit.bind(this));
 
     this.input.addEventListener('focus', this.onFocus.bind(this));
-    this.addEventListener('focusout', this.onFocusOut.bind(this));
+    //this.addEventListener('focusout', this.onFocusOut.bind(this));
     this.addEventListener('keyup', this.onKeyup.bind(this));
     this.addEventListener('keydown', this.onKeydown.bind(this));
   }
@@ -35,7 +35,7 @@ class PredictiveSearch extends SearchForm {
     }
 
     // Update the term asap, don't wait for the predictive search query to finish loading
-    this.updateSearchForTerm(this.searchTerm, newSearchTerm);
+    // this.updateSearchForTerm(this.searchTerm, newSearchTerm);
 
     this.searchTerm = newSearchTerm;
 
@@ -109,20 +109,20 @@ class PredictiveSearch extends SearchForm {
     }
   }
 
-  updateSearchForTerm(previousTerm, newTerm) {
-    const searchForTextElement = this.querySelector(
-      "[data-predictive-search-search-for-text]"
-    );
-    const currentButtonText = searchForTextElement?.innerText;
-    if (currentButtonText) {
-      if (currentButtonText.match(new RegExp(previousTerm, "g")).length > 1) {
-        // The new term matches part of the button text and not just the search term, do not replace to avoid mistakes
-        return;
-      }
-      const newButtonText = currentButtonText.replace(previousTerm, newTerm);
-      searchForTextElement.innerText = newButtonText;
-    }
-  }
+  // updateSearchForTerm(previousTerm, newTerm) {
+  //   const searchForTextElement = this.querySelector(
+  //     "[data-predictive-search-search-for-text]"
+  //   );
+  //   const currentButtonText = searchForTextElement?.innerText;
+  //   if (currentButtonText) {
+  //     if (currentButtonText.match(new RegExp(previousTerm, "g")).length > 1) {
+  //       // The new term matches part of the button text and not just the search term, do not replace to avoid mistakes
+  //       return;
+  //     }
+  //     const newButtonText = currentButtonText.replace(previousTerm, newTerm);
+  //     searchForTextElement.innerText = newButtonText;
+  //   }
+  // }
 
   switchOption(direction) {
     if (!this.getAttribute('open')) return;
@@ -255,13 +255,13 @@ class PredictiveSearch extends SearchForm {
     this.setLiveRegionText(this.querySelector('[data-predictive-search-live-region-count-value]').textContent);
   }
 
-  getResultsMaxHeight() {
-    this.resultsMaxHeight = window.innerHeight - document.querySelector('.section-header').getBoundingClientRect().bottom;
-    return this.resultsMaxHeight;
-  }
+  // getResultsMaxHeight() {
+  //   this.resultsMaxHeight = window.innerHeight - document.querySelector('.section-header').getBoundingClientRect().bottom;
+  //   return this.resultsMaxHeight;
+  // }
 
   open() {
-    this.predictiveSearchResults.style.maxHeight = this.resultsMaxHeight || `${this.getResultsMaxHeight()}px`;
+    // this.predictiveSearchResults.style.maxHeight = this.resultsMaxHeight || `${this.getResultsMaxHeight()}px`;
     this.setAttribute('open', true);
     this.input.setAttribute('aria-expanded', true);
     this.isOpen = true;

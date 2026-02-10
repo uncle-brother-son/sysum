@@ -1,57 +1,53 @@
-{% comment %}
-  Renders a product media modal. Also see 'product-media-gallery'
-
-  Accepts:
-  - product: {Object} Product liquid object
-  - variant_images: {Array} Product images associated with a variant
-
-  Usage:
-  {% render 'product-media-modal' %}
-{% endcomment %}
-
-<product-modal id="ProductModal-{{ section.id }}" class="product-media-modal media-modal">
+<product-modal>
   <div
-    class="product-media-modal__dialog"
+    class="fixed h-full w-full top-0 left-0 bg-sand-wet z-[200]"
     role="dialog"
     aria-label="{{ 'products.modal.label' | t }}"
     aria-modal="true"
-    tabindex="-1"
+    tabindex="0"
+    x-show="zoomView"
+    x-trap="zoomView" 
+    @keydown.left.window="prev()"
+    @keydown.right.window="next()"
+    @keydown.escape.window="zoomClose()"
+    x-transition.opacity.duration.640ms 
   >
-    <button
-      id="ModalClose-{{ section.id }}"
-      type="button"
-      class="product-media-modal__toggle"
-      aria-label="{{ 'accessibility.close' | t }}"
-    >
-      {% render 'icon-close' %}
-    </button>
 
-    <div
-      class="product-media-modal__content color-background-1 gradient"
-      role="document"
-      aria-label="{{ 'products.modal.label' | t }}"
-      tabindex="0"
-    >
-      {%- liquid
-        if product.selected_or_first_available_variant.featured_media != null
-          assign media = product.selected_or_first_available_variant.featured_media
-          render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants
-        endif
-      -%}
-
+    <div role="document" aria-label="{{ 'products.modal.label' | t }}" tabindex="0">
       {%- for media in product.media -%}
-        {%- liquid
-          if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
-            assign variant_image = true
-          else
-            assign variant_image = false
-          endif
-
-          unless media.id == product.selected_or_first_available_variant.featured_media.id
-            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_image
-          endunless
-        -%}
+          <div class="absolute top-0 left-0 w-screen h-screen overflow-auto opacity-0"
+            @click="zoomImg({{ forloop.index }})"
+            x-ref="img{{ forloop.index }}"
+            :class="{ 'cursor-zoom-out': zoomed, 'cursor-zoom-in': !zoomed }"
+          >
+              {% render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: true %}
+          </div>
       {%- endfor -%}
     </div>
+
+    <button class="close fixed right-2 md:right-4 top-2 md:top-3 z-10" @click="zoomClose()" type="button" aria-label="{{ 'accessibility.close' | t }}" x-transition:enter.opacity.delay.320ms.duration.160ms x-transition:leave.opacity.duration.160ms>
+      <span class="p-1"><svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Close</title>{% render 'icons' with 'icon-close-bold' %}</svg></span>
+    </button>
+
+    <div class="flex fixed bottom-6 md:bottom-4 right-1/2 translate-x-1/2 z-10 bg-white rounded">
+      <button class="p-1 group" type="button" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}"
+        @click="prev()"
+        x-ref="left">
+        <svg class="icon-chevron-left transition-all duration-320 group-disabled:fill-pebble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Previous Image</title>{% render 'icons' with 'icon-chevron-regular-left' %}</svg>
+      </button>
+      <div class="text-12 p-1">
+        <span x-text="currentImg"></span> / <span x-text="slideCount"></span>
+      </div>
+      <button class="p-1 group" type="button" name="next" aria-label="{{ 'general.slider.next_slide' | t }}"
+        @click="next()"
+        x-ref="right">
+        <svg class="icon-chevron-right transition-all duration-320 group-disabled:fill-pebble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Next Image</title>{% render 'icons' with 'icon-chevron-regular-right' %}</svg>
+      </button>
+    </div>
+
+    <div class="fixed flex justify-center items-center inset-0 transition-opacity duration-320 ease-sysum" x-show="bg_loader">
+      <svg class="h-6 fill-pebble animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 30"><title>Sysum loading</title>{% render 'icons' with 'buttercup' %}</svg>
+    </div>
+
   </div>
 </product-modal>

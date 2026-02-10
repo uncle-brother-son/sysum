@@ -1,0 +1,51 @@
+{%- liquid 
+  assign free_delivery_threshold = shop.metaobjects.markets[cart.currency.iso_code].value 
+  assign free_delivery_threshold_float = free_delivery_threshold | times: 1.0
+  assign total_cart_value = cart.original_total_price | divided_by: 100
+  assign left_to_spend = free_delivery_threshold | minus: total_cart_value | times: 100
+  assign promo_threshold = free_delivery_threshold | times: 30
+  assign percentage_threshold = total_cart_value | divided_by: free_delivery_threshold_float | times: 100
+  assign displayed_products = 0
+  assign max_display = 2
+-%}
+
+{% if total_cart_value < free_delivery_threshold %}
+  {% if  left_to_spend < promo_threshold %}
+    <div class="mx-2 md:mx-5 p-2 bg-white rounded text-12">
+      
+      <div class=" w-full h-1 bg-sand-wet rounded-full relative">
+        <div class="h-1 bg-moss rounded-full rounded-r-none" style="width:{{ percentage_threshold }}%;"></div>
+      </div>
+      <div class="mt-1">You're {{ left_to_spend | money }} away from Free delivery</div>
+      <div class="flex flex-col md:flex-row gap-1 w-full mt-4" role="list" aria-label="Suggested products" >
+        {% for product in collections['running-accessories'].products %}
+          {% if displayed_products >= max_display %}
+            {% break %}
+          {% endif %}
+          {% assign product_in_cart = false %}
+          {% for item in cart.items %}
+            {% if item.product.id == product.id %} {% comment %}or left_to_spend > product.price{% endcomment %}
+              {% assign product_in_cart = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% unless product_in_cart %}
+            <a href="{{ product.url }}" class="mb-1 p-1 flex-1 flex gap-1 bg-sand-wet/60 backdrop-blur rounded hover:bg-sand-wet transition duration-640 ease-sysum">
+              <div class="w-8 flex-none">
+                <img src="{{ product.images[1] | image_url: width: 300 }}" alt="{{ product.images[1].alt | escape }}" loading="lazy" width="150" height="{{ 150 | divided_by: product.images[1].aspect_ratio | ceil }}" >
+              </div>
+              <div class="flex flex-col">
+                  <div>{{ product.title }}</div>
+                  <div class="flex flex-row gap-1">
+                    {% render 'price', product: product, price_class: 'text-12' %}
+                    {% if product.available == false %}<span class="text-slate uppercase self-end">{{- 'products.product.sold_out' | t -}}</span>{% endif %}
+                  </div>
+              </div>
+            </a>
+            {% assign displayed_products = displayed_products | plus: 1 %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}

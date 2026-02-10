@@ -34,7 +34,7 @@ class FacetFiltersForm extends HTMLElement {
     const sections = FacetFiltersForm.getSections();
     const countContainer = document.getElementById('ProductCount');
     const countContainerDesktop = document.getElementById('ProductCountDesktop');
-    document.getElementById('ProductGridContainer').querySelector('.collection').classList.add('loading');
+    document.getElementById('ProductGridContainer').querySelector('.product_grid').classList.add('loading');
     if (countContainer){
       countContainer.classList.add('loading');
     }
@@ -63,6 +63,7 @@ class FacetFiltersForm extends HTMLElement {
         FacetFiltersForm.renderFilters(html, event);
         FacetFiltersForm.renderProductGridContainer(html);
         FacetFiltersForm.renderProductCount(html);
+        FacetFiltersForm.renderActiveFacetCount(html);
       });
   }
 
@@ -71,6 +72,7 @@ class FacetFiltersForm extends HTMLElement {
     FacetFiltersForm.renderFilters(html, event);
     FacetFiltersForm.renderProductGridContainer(html);
     FacetFiltersForm.renderProductCount(html);
+    FacetFiltersForm.renderActiveFacetCount(html);
   }
 
   static renderProductGridContainer(html) {
@@ -81,12 +83,21 @@ class FacetFiltersForm extends HTMLElement {
     const count = new DOMParser().parseFromString(html, 'text/html').getElementById('ProductCount').innerHTML
     const container = document.getElementById('ProductCount');
     const containerDesktop = document.getElementById('ProductCountDesktop');
+    const containerButton = document.getElementById('ProductCountButton');
     container.innerHTML = count;
+    containerButton.innerHTML = count;
     container.classList.remove('loading');
     if (containerDesktop) {
       containerDesktop.innerHTML = count;
       containerDesktop.classList.remove('loading');
     }
+  }
+
+  static renderActiveFacetCount(html) {
+    const count = new DOMParser().parseFromString(html, 'text/html').getElementById('FacetButtonUpdate').innerHTML
+    const container = document.getElementById('FacetButtonUpdate');
+    container.innerHTML = count;
+    container.classList.remove('loading');
   }
 
   static renderFilters(html, event) {
@@ -124,14 +135,14 @@ class FacetFiltersForm extends HTMLElement {
   }
 
   static renderAdditionalElements(html) {
-    const mobileElementSelectors = ['.mobile-facets__open', '.mobile-facets__count', '.sorting'];
+    const mobileElementSelectors = ['.mobile-facets__open', '.mobile-facets__float', '.mobile-facets__count', '.sorting'];
 
     mobileElementSelectors.forEach((selector) => {
       if (!html.querySelector(selector)) return;
       document.querySelector(selector).innerHTML = html.querySelector(selector).innerHTML;
     });
 
-    document.getElementById('FacetFiltersFormMobile').closest('menu-drawer').bindEvents();
+    //document.getElementById('FacetFiltersFormMobile').closest('menu-drawer').bindEvents();
   }
 
   static renderCounts(source, target) {

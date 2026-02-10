@@ -1,0 +1,16 @@
+<div class="template-subscribe grid_ pt-2 md:pt-3 mb-4 md:mb-6" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+  <div class="col-span-full mb-4 md:mb-0 px-1 flex flex-col gap-6">
+    <h1>Thank you for subscribing</h1>
+    <div>
+      <p>Your email has now been added to our mail list</p>
+      <a href="/" class="primary">Explore</a>
+    </div>
+    <div class="relative" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+      <picture id="flip">
+        <source media="(max-width: 767px)" srcset="{{ shop.metaobjects.image.subscribe-confirmation.mobile | image_url: width: 488 }} 488w, {{ shop.metaobjects.image.subscribe-confirmation.mobile | image_url: width: 767 }} 767w " sizes="(min-width: 780px) calc(100vw - 80px), calc(100vw - 16px)">
+        {{ shop.metaobjects.image.subscribe-confirmation.desktop | image_url: width: 2480 | image_tag: loading: 'eager', widths: '720, 1100, 1376, 1630, 1850, 2048', sizes: '(min-width: 780px) calc(100vw - 80px), calc(100vw - 16px)' }}
+      </picture>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,98 @@
+<div class="grid_ mb-20 md:mb-25">
+  {% render 'sticky-nav' %}
+  <div class="flex flex-col gap-10 col-span-full md:col-start-4 md:col-span-7 mx-1 md:mx-0 md:pt-3" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')" {% if cart.currency.iso_code == 'GBP' %}x-data="{ on : true }"{% else %}x-data="{ on : false }"{% endif %}>
+      <div class="flex gap-1">
+        <svg class="info-shipping w-3 md:w-[26px] fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ page.title | escape }}</title>{% render 'icons' with 'info-shipping' %}</svg>
+        <h1>{{ page.title | escape }}</h1>
+      </div>
+
+    {% comment %}
+      <div class="bg-moss rounded py-2 px-3 text-white flex gap-2">
+        <svg class="icon-info fill-white w-4 flex-none mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Info</title>{% render 'icons' with 'icon-info' %}</svg>
+        <span>To celebrate the arrival of our mailers, we’re giving away free next-day delivery all March</span>
+      </div>
+    {% endcomment %}
+
+      <div class="flex flex-col gap-5">
+        <ul class="toggle self-start" @click="on = !on">
+          <li :class="on ? 'selected' : ''">UK</li>
+          <li :class="!on ? 'selected' : ''">Worldwide</li>
+        </ul>
+
+        <div class="flex flex-col gap-5" x-show="on">
+          <div>{{ shop.metaobjects.info.delivery-info-uk.description }}</div>
+          <div>
+            <h3>{{ shop.metaobjects.delivery.standard-uk.header }}</h3>
+            <div class="flex flex-col gap-1 mb-2">
+              {% for row in shop.metaobjects.delivery.standard-uk.cost.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+            <div class="flex flex-col gap-1">
+              {% for row in shop.metaobjects.delivery.standard-uk.duration.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+          </div>
+          <div>
+            <h3>{{ shop.metaobjects.delivery.express-uk.header }}</h3>
+            <div class="flex flex-col gap-1 mb-2">
+              {% for row in shop.metaobjects.delivery.express-uk.cost.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+            <div class="flex flex-col gap-1">
+              {% for row in shop.metaobjects.delivery.express-uk.duration.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-5" x-show="!on">
+          <div>{{ shop.metaobjects.info.delivery-info-worldwide.description }}</div>
+          <div>
+            <h3>{{ shop.metaobjects.delivery.standard-worldwide.header }}</h3>
+            <div class="flex flex-col gap-1 mb-2">
+              {% for row in shop.metaobjects.delivery.standard-worldwide.cost.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+            <div class="flex flex-col gap-1">
+              {% for row in shop.metaobjects.delivery.standard-worldwide.duration.value %}
+                {% assign col = row | split: "|" %}
+                <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{ page.content }}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.care-page.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "header",
+      "label": "Care Menu Name"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Care Menu"
+    }
+  ]
+}
+{% endschema %}

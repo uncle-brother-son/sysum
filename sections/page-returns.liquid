@@ -1,0 +1,135 @@
+<div class="grid_ mb-20 md:mb-25">
+  {% render 'sticky-nav' %}
+  <div class="flex flex-col gap-10 col-span-full md:col-start-4 md:col-span-7 mx-1 md:mx-0 md:pt-3" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+    <div class="flex gap-1">
+      <svg class="info-returns w-3 md:w-[26px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ page.title | escape }}</title>{% render 'icons' with 'info-returns' %}</svg>
+      <h1>{{ page.title | escape }}</h1>
+    </div>
+    {{ page.content }}
+    {%- form 'contact', id: 'ReturnsForm' -%}
+      <h2 class="mb-2">Returns form</h2>
+      {%- if form.posted_successfully? -%}
+        <p class="form-status form__message flex items-center gap-x-1 success" tabindex="-1" autofocus>
+          <span class="visually_hidden">{{ 'accessibility.success' | t }}</span>
+          <svg class="icon-tick !fill-moss_l" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Success</title>{% render 'icons' with 'icon-tick-bold' %}</svg>
+          {{ 'templates.contact.form.returns_success' | t }}
+        </p>
+      {%- elsif form.errors -%}
+        <p class="form__message flex items-center gap-x-1 error" role="alert"  tabindex="-1" autofocus>
+          <span class="visually_hidden">{{ 'accessibility.error' | t }}</span>
+          <svg class="icon-error !fill-clay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Error</title>{% render 'icons' with 'icon-error' %}</svg>
+          {{ 'templates.contact.form.error_heading' | t }}
+        </p>
+        <ul class="style-dash mb-5 ml-3" role="list">
+          <li>
+            <a href="#ReturnsForm-email" class="text-link text-12">
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}
+            </a>
+          </li>
+        </ul>
+      {%- endif -%}
+      <div class="field">
+        <input
+          autocomplete="name"
+          type="text"
+          id="ReturnsForm-name"
+          name="contact[{{ 'templates.contact.form.name' | t }}]"
+          value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+          placeholder=" "
+          required
+        >
+        <label for="ReturnsForm-name">{{ 'templates.contact.form.name' | t }}</label>
+      </div>
+      <div class="field field--with-error">
+        <input
+          autocomplete="email"
+          type="email"
+          id="ReturnsForm-email"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ReturnsForm-email-error"
+          {% endif %}
+          placeholder=" "
+        >
+        <label for="ReturnsForm-email">{{ 'templates.contact.form.email' | t }}</label>
+        {%- if form.errors contains 'email' -%}
+          <span id="ReturnsForm-email-error" class="form__message">
+            <span class="visually_hidden">{{ 'accessibility.error' | t }}</span>
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </span>
+        {%- endif -%}
+      </div>
+      <div class="field">
+        <input
+          type="text"
+          id="ReturnsForm-orderNumber"
+          name="contact[{{ 'templates.contact.form.order_number' | t }}]"
+          placeholder=" "
+          required
+        >
+        <label for="ReturnsForm-orderNumber">{{ 'templates.contact.form.order_number' | t }}</label>
+      </div>
+      <div class="field flex flex-row">
+        <select
+          id="ReturnsForm-reason"
+          name="contact[{{ 'templates.contact.form.reason' | t }}]"
+          required
+        >
+          <option value="">Please select a reason</option>
+          <option value="Too small">Too small</option>
+          <option value="Too big">Too big</option>
+          <option value="Not what I expected">Not what I expected</option>
+          <option value="Issue with product">Issue with product</option>
+          <option value="Other">Other</option>
+        </select>
+        <label for="ReturnsForm-reason">{{ 'templates.contact.form.reason' | t }}</label>
+        <div class="p-2.5 bg-white">
+          <svg class="icon-chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Show password</title>{% render 'icons' with 'icon-chevron-regular-down' %}</svg>
+        </div>
+      </div>
+      <div class="field">
+        <textarea
+          rows="4"
+          id="ReturnsForm-body"
+          name="contact[{{ 'templates.contact.form.returns_comment' | t }}]"
+          placeholder=" "
+          required
+        >
+          {{- form.body -}}
+        </textarea>
+        <label for="ReturnsForm-body">{{ 'templates.contact.form.returns_comment' | t }}</label>
+      </div>
+      <div class="flex w-full mt-3">
+        <button type="submit" class="primary">
+          {{ 'templates.contact.form.send' | t }}
+        </button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.care-page.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "header",
+      "label": "Care Menu Name"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Care Menu"
+    }
+  ]
+}
+{% endschema %}

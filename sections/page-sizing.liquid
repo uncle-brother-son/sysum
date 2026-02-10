@@ -1,0 +1,83 @@
+<div class="grid_ mb-20 md:mb-25">
+  {% render 'sticky-nav' %}
+  <div class="flex flex-col gap-10 col-span-full md:col-start-4 md:col-span-7 mx-1 md:mx-0 md:pt-3" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+    
+    <h1>{{ page.title | escape }}</h1>
+    
+    {{ page.content }}
+
+    <div class="flex-1 flex flex-col gap-5" x-data="{ on: true }">
+      
+      <h2>Size charts</h2>
+      
+      <ul class="toggle self-start" @click="on = !on">
+        <li :class="on ? 'selected' : ''">CM</li>
+        <li :class="!on ? 'selected' : ''">IN</li>
+      </ul>
+      
+      {% assign array_guide = 'women,men,socks,head,cap,scarf' | split: ',' %}
+      {% for guide in array_guide %}
+        <div>
+          <h3>{{ shop.metaobjects.size_guide[guide].name }}</h3>
+          <p>{{ shop.metaobjects.size_guide[guide].description }}</p>
+          <div class="w-full flex border-pebble border-t border-l text-center">
+            {% for entry in shop.metaobjects.size_guide[guide].entry.value %}
+              <ul class="flex flex-col text-16 border-r border-pebble {% if forloop.first %}font-bold w-10 md:w-15{% else %}grow{% endif %}">
+                <li class="p-0.5 border-b border-pebble">{{ entry.name }}</li>
+                {% for size in entry.values.value %} 
+                  {% assign numbers = size | split: "," %}
+                  {% if numbers.size > 1 %}
+                    <li class="p-0.5 border-b border-pebble" x-show="on">{{ numbers[0] }}</li>
+                    <li class="p-0.5 border-b border-pebble" x-show="!on">{{ numbers[1] | append: '"' }}</li>
+                  {% else %}
+                    <li class="p-0.5 border-b border-pebble">{{ size }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <div class="flex-1 flex flex-col gap-5">
+      <h2>How to measure</h2>
+      <div class="flex flex-col md:flex-row gap-1">
+        <div class="flex-1 flex flex-col gap-5">
+          {% assign list_num = shop.metaobjects.measurement_info.measurement-info.header.value.size %}
+          {% for i in (1..list_num) %}
+            {% assign index = i | minus: 1 %}
+            <div>
+              <h3>{{ shop.metaobjects.measurement_info.measurement-info.header.value[index] }}</h3>
+              <p>{{ shop.metaobjects.measurement_info.measurement-info.description.value[index] }}</p>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="flex-1">
+          <img src="{{ shop.metaobjects.measurement_info.measurement-info.image | image_url: width: 1000 }}" alt="{{ product.images[1].alt | escape }}" loading="lazy" width="150" height="{{ 150 | divided_by: shop.metaobjects.measurement_info.measurement-info.image.aspect_ratio | ceil }}" >
+        </div>
+      </div>
+    </div>
+        
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.care-page.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "header",
+      "label": "Care Menu Name"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Care Menu"
+    }
+  ]
+}
+{% endschema %}

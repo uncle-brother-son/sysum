@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-care",
+      "settings": {
+        "header": "Customer Care",
+        "menu": "care"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

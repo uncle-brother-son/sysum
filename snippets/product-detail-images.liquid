@@ -1,0 +1,17 @@
+{%- for media in product.media -%}
+    {% if forloop.index > 4 %}
+        <div 
+            id="Slide-{{ section.id }}-{{ media.id }}{{ id_append }}"
+            @click="zoomStart({{ forloop.index }})"
+            class="cursor-zoom-in flex-1 bg-sand-wet rounded"
+            data-media-id="{{ section.id }}-{{ media.id }}"
+            :key="{{ media.position }}"
+        >
+            {{ media.preview_image | image_url: width: 1946 | image_tag:
+                loading: true,
+                sizes: '(min-width: 780px) calc(50vw - 44px), calc(50vw - 12px)',
+                widths: '290, 780, 1070, 1290, 1480, 1650, 1810, 1946, 2048'
+                }}
+        </div>
+    {% endif %}
+{%- endfor -%}

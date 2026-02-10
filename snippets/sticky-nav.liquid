@@ -1,0 +1,29 @@
+<div class="col-span-full md:col-start-1 md:col-span-3 mx-1 md:mr-0 md:mt-16" x-data="{ open: false }" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+  <div class="sticky top-12 mb-5 md:mb-10">
+    <div 
+      :class="isMobile ? 'bg-sand border border-b-0 border-pebble rounded px-2 py-1.5 cursor-pointer' : ''"
+      @click="open = !open"
+      @click.outside="open = false"
+    >
+      <div :class="isMobile ? 'text-12 uppercase leading-[1.5rem] text-slate flex justify-between items-center' : 'text-12 uppercase text-slate mb-2'">
+        <span>{{ section.settings.header | capitalize }}</span>
+        <svg class="icon-chevron-down fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" x-show="isMobile && !open"><title>Open Menu</title>{% render 'icons' with 'icon-chevron-regular-down' %}</svg>
+        <svg class="icon-chevron-up fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" x-show="isMobile && open"><title>Close Menu</title>{% render 'icons' with 'icon-chevron-regular-up' %}</svg>
+      </div>
+    </div>
+    <div 
+      :class="isMobile ? 'bg-sand border border-t-0 border-pebble rounded relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum' : ''"
+      x-ref="pageMenu" :style="open && isMobile ? 'max-height: ' + $refs.pageMenu.scrollHeight + 'px' : ''"
+    >
+      <ul :class="isMobile ? 'px-2 pt-1.5 pb-3' : ''">
+        {%- for link in section.settings.menu.links -%}
+          <li class="{% if forloop.last == false %}mb-2 md:mb-0.5{% endif %}">
+            <a href="{{ link.url }}" class="group block md:inline text-12">
+              <span class="text-link group-hover:border-black {% if link.active %}border-black{% endif %}">{{ link.title }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>

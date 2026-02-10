@@ -1,0 +1,38 @@
+{% liquid 
+    assign p_title = product.title | split: "—" | first | strip
+    assign p_id = product.id 
+    assign matching_products = ""
+  %}
+
+  {% for product in collections.all.products %}
+    {% assign product_title = product.title | split: "—" | first | strip %}
+    {% if product_title == p_title %}
+      {% assign matching_products = matching_products | append: product.id | append: "," %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign matching_products_array = matching_products | split: "," %}
+
+  {% if matching_products_array.size > 1 %}
+    
+    <div class="grid grid-cols-5 w-full gap-0.5 ">
+      {% for product in collections.all.products %}
+        {% assign cp_title = product.title | split: "—" | first | strip %}
+        {% if cp_title == p_title %}
+          <div class="rounded border hover:border transition duration-320 {% if product.id == p_id %} border-black {% else %} border-sand-wet hover:border-pebble {% endif %}">
+            <a class="block" href="{{ product.url }}">
+              {{ product.images[1] | image_url: width: 128 | image_tag: loading: 'lazy', width: product.images[1].width, height: product.images[1].height, sizes: '(min-width: 780px) calc(5vw - 10px), calc(20vw - 15px)' }}
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% for variant in product.variants %}
+      {% if variant.option2 %}
+        <div class="text-12 mt-1 mb-3">{{ variant.option2 }}</div>
+        {%- break -%}
+      {% endif %}
+    {% endfor %}
+
+  {% endif %}

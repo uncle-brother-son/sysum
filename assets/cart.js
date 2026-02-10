@@ -1,3 +1,5 @@
+// cart.js
+
 class CartRemoveButton extends HTMLElement {
   constructor() {
     super();
@@ -101,17 +103,17 @@ class CartItems extends HTMLElement {
         const parsedState = JSON.parse(state);
         const quantityElement = document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
         const items = document.querySelectorAll('.cart-item');
-
+      
         if (parsedState.errors) {
           quantityElement.value = quantityElement.getAttribute('value');
           this.updateLiveRegions(line, parsedState.errors);
           return;
         }
-
+        
         this.classList.toggle('is-empty', parsedState.item_count === 0);
         const cartDrawerWrapper = document.querySelector('cart-drawer');
         const cartFooter = document.getElementById('main-cart-footer');
-
+        
         if (cartFooter) cartFooter.classList.toggle('is-empty', parsedState.item_count === 0);
         if (cartDrawerWrapper) cartDrawerWrapper.classList.toggle('is-empty', parsedState.item_count === 0);
 
@@ -131,7 +133,7 @@ class CartItems extends HTMLElement {
           }
         }
         this.updateLiveRegions(line, message);
-
+        
         const lineItem = document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);
         if (lineItem && lineItem.querySelector(`[name="${name}"]`)) {
           cartDrawerWrapper ? trapFocus(cartDrawerWrapper, lineItem.querySelector(`[name="${name}"]`)) : lineItem.querySelector(`[name="${name}"]`).focus();
@@ -141,8 +143,9 @@ class CartItems extends HTMLElement {
           trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'))
         }
         publish(PUB_SUB_EVENTS.cartUpdate, {source: 'cart-items'});
+        
       }).catch(() => {
-        this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
+        this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hide'));
         const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
         errors.textContent = window.cartStrings.error;
       })
@@ -178,7 +181,7 @@ class CartItems extends HTMLElement {
     const cartItemElements = this.querySelectorAll(`#CartItem-${line} .loading-overlay`);
     const cartDrawerItemElements = this.querySelectorAll(`#CartDrawer-Item-${line} .loading-overlay`);
 
-    [...cartItemElements, ...cartDrawerItemElements].forEach((overlay) => overlay.classList.remove('hidden'));
+    [...cartItemElements, ...cartDrawerItemElements].forEach((overlay) => overlay.classList.remove('hide'));
 
     document.activeElement.blur();
     this.lineItemStatusElement.setAttribute('aria-hidden', false);
@@ -191,8 +194,8 @@ class CartItems extends HTMLElement {
     const cartItemElements = this.querySelectorAll(`#CartItem-${line} .loading-overlay`);
     const cartDrawerItemElements = this.querySelectorAll(`#CartDrawer-Item-${line} .loading-overlay`);
 
-    cartItemElements.forEach((overlay) => overlay.classList.add('hidden'));
-    cartDrawerItemElements.forEach((overlay) => overlay.classList.add('hidden'));
+    cartItemElements.forEach((overlay) => overlay.classList.add('hide'));
+    cartDrawerItemElements.forEach((overlay) => overlay.classList.add('hide'));
   }
 }
 

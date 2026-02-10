@@ -1,0 +1,25 @@
+<span class="visually_hidden">{{ 'sections.footer.payment' | t }}</span>
+<ul class="flex flex-wrap gap-0.5 justify-center" role="list">
+    {% assign enabled_payment_types = 'visa,master,american_express,paypal,apple_pay,google_pay' | remove: ' ' | split: ',' %}
+    {%- for payment in enabled_payment_types -%}
+        {%- assign icon_class = 'payment-' | append: payment -%}
+        <li><svg class="payment-{{ payment }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 24"><title>{{ payment | replace: "_", " " | capitalize }}</title>{% render 'icons' with icon_class %}</svg></li>
+    {%- endfor -%}
+</ul>
+
+
+
+{% comment %}
+    // full icon list
+    visa
+    master
+    american_express
+    discover
+    diners_club
+    paypal
+    apple_pay
+    google_pay
+{% endcomment %}
+
+
+

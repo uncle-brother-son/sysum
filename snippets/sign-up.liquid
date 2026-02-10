@@ -1,0 +1,90 @@
+<div 
+  class="absolute z-20 left-1/2 -translate-x-1/2 md:left-5 md:translate-x-0 top-[120%] w-CM5 md:w-CD8 lg:w-CD6 xl:w-CD5 rounded p-1 bg-white flex flex-col md:flex-row items-center gap-1 backdrop-blur-sm transition ease-sysum"
+  :class="localStorage.getItem('signUpBanner') === 'hidden' || localStorage.getItem('clickCount') < 1 ? '' : 'signup-banner'"
+  x-show="!hideSignUpBanner" 
+  x-transition.opacity.duration.320ms
+  x-init="hideSignUpBanner = localStorage.getItem('signUpBanner') === 'hidden' || localStorage.getItem('clickCount') < 1" 
+>
+  <button 
+      class="close tabfocus top-1 right-1" 
+      @click="hideSignUpBanner = true, localStorage.setItem('signUpBanner', 'hidden');"
+      aria-label="{{ 'accessibility.close' | t }}"
+  >
+      <span class="p-1 bg-white">
+          <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Close</title>{% render 'icons' with 'icon-close-bold' %}</svg>
+      </span>
+  </button>
+  <picture class="w-full md:w-auto">
+    <source media="(max-width: 767px)" srcset="{{ shop.metaobjects.image.sign-up-banner.mobile | image_url: width: 256 }} 256w, {{ shop.metaobjects.image.sign-up-banner.mobile | image_url: width: 810 }} 810w" sizes="(min-width: 767px) calc(25vw - 22px), calc(100vw - 64px)">
+    {{ shop.metaobjects.image.sign-up-banner.desktop | image_url: width: 2480 | image_tag: loading: 'lazy', widths: '256, 810, 1010, 1350', sizes: '(min-width: 767px) calc(25vw - 22px), calc(100vw - 64px)' }}
+  </picture>
+  <div class="flex flex-col gap-2 p-1 w-full">
+    <div class="h1">{{ 'newsletter.header_html' | t }}</div>
+    {%- form 'customer', id: 'ContactBanner', class: 'footer__newsletter newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter banner">
+      <div class="newsletter-form__field-wrapper">
+        <div class="flex flex-row relative">
+          <input
+            id="NewsletterForm--{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="flex-1 appearance-none inline-block w-full px-2 pt-[0.875rem] pb-[0.813rem] box-border rounded-none rounded-l bg-sand font-unis text-black text-16 focus:outline-none placeholder:text-slate"
+            value="{{ form.email }}"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              autofocus
+              aria-invalid="true"
+              aria-describedby="ContactBanner-error"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="ContactBanner-success"
+            {% endif %}
+            placeholder="{{ 'newsletter.label' | t }}"
+            required
+            >
+          <button 
+            type="submit"
+            class="flex-none self-stretch bg-sand px-3 py-[0.875rem] text-16 leading-[1.25rem] font-sysum whitespace-nowrap rounded-none rounded-r focus-visible:bg-sap" 
+            name="commit"
+            id="SubscribeBanner"
+            aria-label="{{ 'newsletter.button_label' | t }}"
+            >
+            {{ 'newsletter.button_label' | t }}
+          </button>
+        </div>
+        {%- if form.errors -%}
+          <div 
+            class="flex flex-row pt-1" 
+            id="ContactBanner-error"
+          >
+            <div class="pr-0.5">
+              <svg class="icon-close fill-clay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Error</title>{% render 'icons' with 'icon-close-regular' %}</svg>
+            </div>
+            <div class="2 text-clay">
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+      {%- if form.posted_successfully? -%}
+        <div
+          class="flex flex-row pt-1"
+          id="ContactBanner-success"
+          tabindex="-1"
+          autofocus
+        >
+          <div class="pr-0.5">
+            <svg class="icon-tick fill-moss" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Error</title>{% render 'icons' with 'icon-tick-bold' %}</svg>
+          </div>
+          <div class="text-12  text-moss">
+            {{- 'newsletter.success' | t }}
+          </div>
+        </div>		
+      {%- endif -%}
+    {% endform %}
+    <p class="text-12 mb-0">{{ 'newsletter.copy_html' | t: link: '/pages/privacy-policy', target: '_blank' }}</p>
+  </div>
+</div>

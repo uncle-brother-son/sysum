@@ -1,16 +1,4 @@
-{%- liquid
-  if cart == empty
-    render 'icon-cart-empty'
-  else
-    render 'icon-cart'
-  endif
--%}
-<span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-{%- if cart != empty -%}
-  <div class="cart-count-bubble">
-    {%- if cart.item_count < 100 -%}
-      <span aria-hidden="true">{{ cart.item_count }}</span>
-    {%- endif -%}
-    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
-  </div>
-{%- endif -%}
+<svg class="icon-bag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Bag</title>{% render 'icons' with 'icon-bag' %}</svg>
+<div class="text-12 leading-6 text-center font-unis font-bold">{%- if cart == empty -%}0{%- elsif cart.item_count < 100 -%}{{ cart.item_count }}{%- endif -%}</div>
+<span class="visually_hidden">{{ 'templates.cart.cart' | t }}</span>
+<span class="visually_hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>

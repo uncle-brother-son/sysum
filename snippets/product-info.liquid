@@ -1,0 +1,281 @@
+
+{% assign product_info = product.metafields.custom.info.value %}
+
+<div class="grid_ my-10 md:my-20 text-14 relative">
+  <div class="px-1 col-span-full md:px-0 md:col-start-2 md:col-span-6">
+    
+    <ul x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+      <li x-ref="productDescription" class="mb-2">
+        <button 
+        class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+        @click="prodFeature !== 1 ? prodFeature = 1 : prodFeature = null"
+        >
+          <span>Description</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 1 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+        class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+        x-ref="container1" :style="prodFeature == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4">
+              <div class="col-start-1 col-span-6">
+                {{ product.description }}
+              </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="my-2">
+        <button 
+        class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+        @click="prodFeature !== 2 ? prodFeature = 2 : prodFeature = null"
+        >
+          <span>Composition</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 2 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+        class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+        x-ref="container2" :style="prodFeature == 2 ? 'max-height: ' + $refs.container2.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4 grid grid-cols-6 gap-x-1 gap-y-1">
+            {% for composition in product_info.composition.value %}
+              {% assign items = composition | split: "|" %}
+                <div class="col-start-1 col-span-2 {% if forloop.rindex < 2 %}mt-2{% endif %}">
+                  {{ items[0] }}
+                </div>
+                {%- liquid 
+                  assign gender_option = product.options_with_values | where: 'name', 'Gender' | first 
+                  assign gender_value = gender_option.values | first 
+                -%}
+                <div class="col-start-3 col-span-4 {% if forloop.rindex < 2 %}mt-2{% endif %}">
+                  {% if items[0] == 'Weight' and gender_value == 'Men' %}{{ items[2] }}{% else %}{{ items[1] }}{% endif %}
+                </div>  
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+
+      <li class="my-2">
+        <button 
+          class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+          @click="prodFeature !== 3 ? prodFeature = 3 : prodFeature = null"
+        >
+          <span>Care</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 3 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+          class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+          x-ref="container3" :style="prodFeature == 3 ? 'max-height: ' + $refs.container3.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4 grid grid-cols-6 gap-x-1 gap-y-4">
+            <div class="col-span-full sm:col-span-3">
+              <div class="flex flex-col gap-1"> 
+                {% assign care_array = 'washing,bleach,drying,dry-clean,iron' | split: "," %}
+                {% for care in product_info.care.value %}
+                  {% assign info = care | split: "|" %}
+                  {% capture icon_class %}care-{{ care_array[forloop.index0] }}-{{ info[0] }}{% endcapture %}
+                  <div class="flex gap-1 items-center">
+                    <svg class="care-{{ care_array[forloop.index0] }}-{{ info[0] }} h-2.5"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ care_array[forloop.index0] | replace: "-", " " | capitalize }}</title>{% render 'icons' with icon_class %}</svg>
+                    <span>{{ info[1] }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-span-full sm:col-start-4 sm:col-span-3">
+              {{ section.settings.care }}
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="my-2">
+        <button 
+          class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+          @click="prodFeature !== 4 ? prodFeature = 4 : prodFeature = null"
+        >
+          <span>Responsibility</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 4 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+          class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+          x-ref="container4" :style="prodFeature == 4 ? 'max-height: ' + $refs.container4.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4 grid grid-cols-6 gap-x-1 gap-y-1">
+            {% for responsibility in product_info.responsibility.value %}
+              {% assign items = responsibility | split: "|" %}
+                <div class="col-start-1 col-span-2">
+                  {{ items[0] }}
+                </div>
+                <div class="col-start-3 col-span-4">
+                  {{ items[1] }}
+                </div>  
+            {% endfor %}
+          </div>
+
+        </div>
+      </li>
+
+      <li x-ref="productSizeFit" class="my-2">
+        <button 
+          class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+          @click="prodFeature !== 5 ? prodFeature = 5 : prodFeature = null"
+        >
+          <span>Size & Fit</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 5 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+          class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+          x-ref="container5" :style="prodFeature == 5 ? 'max-height: ' + $refs.container5.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4 grid grid-cols-6 gap-x-1 gap-y-4" x-data="{ on: true }">
+          
+            <div class="col-span-full sm:col-span-3 bg-sand-wet relative rounded">
+              {{ product.media[0] | image_url: width: 1450 | image_tag: loading: 'lazy', width: product.media[0].width, height: product.media[0].height, sizes: '(min-width: 780px) calc(25vw - 26px), (min-width: 480px) calc(50vw - 28px), calc(100vw - 48px)', widths: '256, 720, 1024, 1260, 1450' }}
+              {% assign info = product.metafields.custom.model_info.value | split: "," %}
+              {% if info[0] %}
+                <div class="w-full px-2 pt-1 pb-2 text-center">{{ info[0] }} is <span x-show="on">{{ info[1] }}</span><span x-show="!on">{{ info[2] }}</span> and wears a size {{ info[3] }}</div>
+              {% endif %}
+            </div>
+            <div class="col-span-full sm:col-start-4 sm:col-span-3 h-full flex flex-col gap-4">
+
+              <ul class="style-dash tight">
+                {% assign array = product_info.size_fit.value %}
+                {% for item in array %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+
+              {%- liquid 
+                assign gender_option = product.options_with_values | where: 'name', 'Gender' | first
+                assign guide = gender_option.values | first 
+                if guide == 'Unisex'
+                  assign guide = product_info.product_type.value
+                endif
+              -%}
+
+              {% if guide == 'Women' or guide == 'Men' %}
+                <button class="inline-block a self-start" @click="showInfo = 'measurement', $dispatch('lock-screen', true)">How to measure</button>
+              {% endif %}
+              
+              {% unless guide == 'Socks' %}
+                <ul class="toggle self-start" @click="on = !on">
+                  <li :class="on ? 'selected' : ''">CM</li>
+                  <li :class="!on ? 'selected' : ''">IN</li>
+                </ul>
+              {% endunless %}
+
+              {%- liquid 
+                assign gender_option = product.options_with_values | where: 'name', 'Gender' | first
+                assign guide = gender_option.values | first 
+                if guide == 'Unisex'
+                  assign guide = product_info.product_type.value
+                endif
+              -%}
+
+              <div class="w-full flex border-pebble border-t border-l text-center">
+                {% for entry in shop.metaobjects.size_guide[guide].entry.value %}
+                  {% if product_info.product_type.value contains 'Top' and entry.name == 'Hips' %}
+                    {% continue %}
+                  {% elsif product_info.product_type.value contains 'Bottom' and entry.name == 'Chest' or entry.name == 'Bust' %}
+                    {% continue %}
+                  {% endif %}
+                  <ul class="grow flex flex-col border-r border-pebble {% if forloop.first %}font-bold{% endif %}">
+                    <li class="p-0.5 border-b border-pebble">{{ entry.name }}</li>
+                    {% for size in entry.values.value %} 
+                      {% assign numbers = size | split: "," %}
+                      {% if numbers.size > 1 %}
+                        <li class="p-0.5 border-b border-pebble" x-show="on">{{ numbers[0] }}</li>
+                        <li class="p-0.5 border-b border-pebble" x-show="!on">{{ numbers[1] | append: '"' }}</li>
+                      {% else %}
+                        <li class="p-0.5 border-b border-pebble">{{ size }}</li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="my-2">
+        <button 
+          class="w-full font-bold text-16 flex justify-between cursor-pointer relative"
+          @click="prodFeature !== 6 ? prodFeature = 6 : prodFeature = null"
+        >
+          <span>Delivery & Returns</span>
+          <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus': prodFeature == 6 }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title>{% render 'icons' with 'icon-plus-regular' %}</svg>
+        </button>
+        <div 
+          class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum"
+          x-ref="container6" :style="prodFeature == 6 ? 'max-height: ' + $refs.container6.scrollHeight + 'px' : ''"
+        >
+          <div class="pt-2 pb-4 flex flex-col gap-3">
+            <ul class="style-dash tight">
+              {% assign array = shop.metaobjects.delivery_tab.pdp.list.value %}
+              {% for item in array %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {{ shop.metaobjects.delivery_tab.pdp.info | metafield_tag }}
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+  <div class="px-1 pt-5 col-span-full md:px-0 md:pt-0 md:col-start-9 md:col-span-3">
+    <div class="sticky top-12">
+      <ul class="style-dash text-14" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+        {% for feature in product_info.features.value %}
+          {% assign list = feature | split: "|" %}
+          <li>
+            {% if list[1] == null %}
+              {{ list[0] }}
+            {% else  %}
+              {% if gender_value == 'Men' %}
+                {{ list[1] }}
+              {% else %}
+                {{ list[0] }}
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="pt-7 text-12">
+        <div x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+          <div class="pb-0.5">Conditions</div>
+          <ul class="functions">
+            {% assign array = 'cold,wind,wet,hot' | split: ',' %}
+            {% for item in array %}
+              {% liquid
+                assign icon_class = 'info-' | append: item
+                assign item_caps = item | capitalize
+              %}
+              <li class="{% if product.metafields.custom.conditions == item_caps %}selected{% endif %}" x-data="{ showIcon:true }" @mouseover="isMobile === true ? showIcon = true : showIcon = false" @mouseleave="isMobile === true ? showIcon = false : showIcon = true" @click="if (isMobile){ showIcon = !showIcon }" @click.away="showIcon = true">
+                <div><svg class="info-{{ item }} h-2 fill-slate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" x-show="showIcon" x-transition:enter.delay.160ms x-transition:leave.delay.80ms><title>{{ item_caps }}</title>{% render 'icons' with icon_class %}</svg></div>
+                <div><span x-show="!showIcon" x-transition:enter.delay.160ms x-transition:leave.delay.80ms>{{ item_caps }}</span></div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="mt-4" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+          <div class="pb-0.5">Temperature</div>
+          <ul class="functions">
+            {% liquid 
+              assign array = '-10ºC,0ºC,10ºC,20ºC,30ºC' | split: ',' 
+              assign temperature = product_info.temperature.value 
+            %}
+            {% for item in array %}
+              {% assign icon_class = 'info-thermometer-' | append: forloop.index %}
+              <li class="{% if temperature contains forloop.index %}selected{% endif %}" x-data="{ showIcon:true }" @mouseover="isMobile === true ? showIcon = true : showIcon = false" @mouseleave="isMobile === true ? showIcon = false : showIcon = true" @click="if (isMobile){ showIcon = !showIcon }" @click.away="showIcon = true">
+                <div><svg class="info-thermometer-{{ forloop.index }} h-2 fill-slate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" x-show="!showIcon" x-transition:enter.delay.160ms x-transition:leave.delay.80ms><title>{{ item }}</title>{% render 'icons' with icon_class %}</svg></div>
+                <div><span x-show="showIcon" x-transition:enter.delay.160ms x-transition:leave.delay.80ms>{{ item }}</span></div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

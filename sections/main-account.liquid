@@ -1,152 +1,149 @@
-{{ 'customer.css' | asset_url | stylesheet_tag }}
-
-{%- style -%}
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
-  }
-{%- endstyle -%}
-
-<div class="customer account section-{{ section.id }}-padding">
-  <div>
-    <h1 class="customer__title">{{ 'customer.account.title' | t }}</h1>
-    <a href="{{ routes.account_logout_url }}">
-      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 18 19">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4.5a3 3 0 116 0 3 3 0 01-6 0zm3-4a4 4 0 100 8 4 4 0 000-8zm5.58 12.15c1.12.82 1.83 2.24 1.91 4.85H1.51c.08-2.6.79-4.03 1.9-4.85C4.66 11.75 6.5 11.5 9 11.5s4.35.26 5.58 1.15zM9 10.5c-2.5 0-4.65.24-6.17 1.35C1.27 12.98.5 14.93.5 18v.5h17V18c0-3.07-.77-5.02-2.33-6.15-1.52-1.1-3.67-1.35-6.17-1.35z" fill="currentColor">
-      </svg>
-      {{ 'customer.log_out' | t }}
-    </a>
+<div class="grid_ mb-20 md:mb-25" x-data="{ show: 'orders', open: false }">
+  <div class="col-span-full md:col-start-1 md:col-span-3 mx-1 md:mr-0 md:mt-16" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+    <div class="sticky top-12 mb-5 md:mb-10">
+      <div 
+        :class="isMobile ? 'bg-white rounded px-2 py-1.5 cursor-pointer' : ''"
+        @click="open = !open"
+        @click.outside="open = false"
+      >
+        <div :class="isMobile ? 'text-12 uppercase leading-[1.5rem] text-slate flex justify-between items-center' : 'text-12 uppercase text-slate mb-2'">
+          <span>{{ 'customer.account.title' | t }}</span>
+          <svg class="icon-chevron-down fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" x-show="isMobile && !open"><title>Open Menu</title>{% render 'icons' with 'icon-chevron-regular-down' %}</svg>
+          <svg class="icon-chevron-up fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" x-show="isMobile && open"><title>Close Menu</title>{% render 'icons' with 'icon-chevron-regular-up' %}</svg>
+        </div>
+      </div>
+      <div 
+        :class="isMobile ? 'bg-white rounded relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum' : ''"
+        x-ref="pageMenu" :style="open && isMobile ? 'max-height: ' + $refs.pageMenu.scrollHeight + 'px' : ''"
+      >
+        <ul :class="isMobile ? 'px-2 pt-1.5 pb-3' : ''">
+            <li class="mb-2 md:mb-0.5"><button @click="show = 'orders', open = !open" class="inline text-link text-12" :class="show == 'orders' ? 'border-black' : ''">{{ 'customer.orders.title' | t }}</button></li>
+            <li class="mb-2 md:mb-0.5"><button @click="show = 'addresses', open = !open" class="inline text-link text-12" :class="show == 'addresses' ? 'border-black' : ''">{{ 'customer.addresses.title_account' | t }}</button></li>
+            <li class="mb-2 md:mb-0.5"><button @click="show = 'info', open = !open" class="inline text-link text-12" :class="show == 'info' ? 'border-black' : ''">{{ 'customer.account.details' | t }}</button></li>
+            <li><a href="{{ routes.account_logout_url }}" class="inline text-link text-12">{{ 'customer.log_out' | t }}</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <div>
-      <h2>{{ 'customer.orders.title' | t }}</h2>
-
-      {% paginate customer.orders by 20 %}
+  <div class="col-span-full md:col-start-4 md:col-span-7 mx-1 md:mx-0 md:pt-3 text-12">
+    <div x-show="show == 'orders'" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+      <h1 class="h1 mb-5 md:mb-10">{{ 'customer.orders.title' | t }} ({{ customer.orders_count }})</h1>
+      {% paginate customer.orders by 6 %}
         {%- if customer.orders.size > 0 -%}
-          <table role="table" class="order-history">
-            <caption class="visually-hidden">
-              {{ 'customer.orders.title' | t }}
-            </caption>
-            <thead role="rowgroup">
-              <tr role="row">
-                <th id="ColumnOrder" scope="col" role="columnheader">{{ 'customer.orders.order_number' | t }}</th>
-                <th id="ColumnDate" scope="col" role="columnheader">{{ 'customer.orders.date' | t }}</th>
-                <th id="ColumnPayment" scope="col" role="columnheader">{{ 'customer.orders.payment_status' | t }}</th>
-                <th id="ColumnFulfillment" scope="col" role="columnheader">
-                  {{ 'customer.orders.fulfillment_status' | t }}
-                </th>
-                <th id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.orders.total' | t }}</th>
-              </tr>
-            </thead>
-            <tbody role="rowgroup">
-              {%- for order in customer.orders -%}
-                <tr role="row">
-                  <td
-                    id="RowOrder"
-                    role="cell"
-                    headers="ColumnOrder"
-                    data-label="{{ 'customer.orders.order_number' | t }}"
-                  >
-                    <a
-                      href="{{ order.customer_url }}"
-                      aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}"
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-1 gap-y-2 w-full flex-wrap">
+            {%- for order in customer.orders -%}
+            <li class="bg-white/60 p-2 rounded">
+              <div class="flex w-full overflow-hidden relative">
+                {%- for line_item in order.line_items -%}
+                  {% if forloop.index == 4 %}
+                    {% break %}
+                  {% else %}
+                    <img
+                      class="w-1/3 rounded-none first-of-type:rounded-l last-of-type:rounded-r"
+                      src="{{ line_item.product.images[1] | image_url: width: 300 }}"
+                      alt="{{ line_item.product.images[1].alt | escape }}"
+                      loading="lazy"
+                      width="150"
+                      height="{{ 150 | divided_by: line_item.product.images[1].aspect_ratio | ceil }}"
                     >
-                      {{ order.name }}
-                    </a>
-                  </td>
-                  <td headers="RowOrder ColumnDate" role="cell" data-label="{{ 'customer.orders.date' | t }}">
-                    {{ order.created_at | time_tag: format: 'date' }}
-                  </td>
-                  <td
-                    headers="RowOrder ColumnPayment"
-                    role="cell"
-                    data-label="{{ 'customer.orders.payment_status' | t }}"
-                  >
-                    {{ order.financial_status_label }}
-                  </td>
-                  <td
-                    headers="RowOrder ColumnFulfillment"
-                    role="cell"
-                    data-label="{{ 'customer.orders.fulfillment_status' | t }}"
-                  >
-                    {{ order.fulfillment_status_label }}
-                  </td>
-                  <td headers="RowOrder ColumnTotal" role="cell" data-label="{{ 'customer.orders.total' | t }}">
-                    {{ order.total_net_amount | money_with_currency }}
-                  </td>
-                </tr>
-              {%- endfor -%}
-            </tbody>
-          </table>
+                    {%- if forloop.index == 3 and forloop.length > 3 -%}
+                      <a href="{{ order.customer_url }}"><div class="absolute h-full w-1/3 right-0 top-0 rounded bg-sand-wet/40 bg-blend-luminosity backdrop-filter backdrop-blur-[4px] flex justify-center items-center font-bold"><span>+{{ forloop.length | minus: 2 }}</span></div></a>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+              <ul class="mt-2 mb-4 w-full">
+                <li class="mb-0.5" id="ColumnOrder" data-label="{{ 'customer.orders.order_number' | t }}"><span class="text-slate">{{ 'customer.orders.order_number' | t }}:</span> {{ order.name }}</li>
+                <li class="mb-0.5" id="ColumnFulfillment" data-label="{{ 'customer.orders.fulfillment_status' | t }}">
+                  <span class="text-slate">{{ 'customer.order.fulfillment_status' | t }}: </span> 
+                  {%- liquid 
+                    if order.fulfillment_status == 'unfulfilled'
+                      assign status = 'customer.order.placed' | t
+                    elsif order.fulfillment_status == 'fulfilled'
+                      assign status = 'customer.order.fulfilled' | t
+                    elsif order.fulfillment_status == 'partial'
+                      assign status = 'customer.order.partial' | t
+                    elsif order.fulfillment_status == 'complete'
+                      assign status = 'customer.order.complete' | t
+                    endif 
+                  -%}
+                  {%- if order.cancelled -%}
+                    <span class="text-clay">{{ 'customer.order.cancelled' | t }}</span>  
+                  {%-  else -%}
+                    <span class="{% if order.fulfillment_status == 'fulfilled' or order.fulfillment_status == 'complete' %}text-moss_l{% else %}text-sap{% endif %}">{{ status }}</span>
+                  {%- endif -%}
+                </li>
+                <li class="mb-0.5" id="ColumnDate" data-label="{{ 'customer.orders.date' | t }}"><span class="text-slate">{{ 'customer.orders.date' | t }}:</span> {{ order.created_at | time_tag: format: 'abbreviated_date' }}</li>
+                <li id="ColumnTotal" data-label="{{ 'customer.orders.total' | t }}"><span class="text-slate">{{ 'customer.orders.total' | t }}:</span> {{ order.total_net_amount | money }}</li>
+              </ul>
+              <div class="flex gap-1 w-full">
+                <a href="{{ order.customer_url }}" class="secondary grow px-0" aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}">{{ 'customer.orders.order_link' | t }}</a>
+                {%- for line_item in order.line_items limit: 1 -%}
+                  {%- if line_item.fulfillment.tracking_url -%}
+                    <a href="{{ line_item.fulfillment.tracking_url }}" target="_blank" class="primary grow px-0" aria-label="{{ 'customer.orders.order_tracking_link' | t }}">{{ 'customer.orders.tracking_link' | t }}</a>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </li>
+            {%- endfor -%}
+          </ul>
         {%- else -%}
           <p>{{ 'customer.orders.none' | t }}</p>
         {%- endif -%}
-
         {%- if paginate.pages > 1 -%}
-          {%- if paginate.parts.size > 0 -%}
-            <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-              <ul role="list">
-                {%- if paginate.previous -%}
-                  <li>
-                    <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">
-                      <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
-                      </svg>
-                    </a>
-                  </li>
-                {%- endif -%}
-
-                {%- for part in paginate.parts -%}
-                  <li>
-                    {%- if part.is_link -%}
-                      <a href="{{ part.url }}" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
-                        {{- part.title -}}
-                      </a>
-                    {%- else -%}
-                      {%- if part.title == paginate.current_page -%}
-                        <span aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
-                          {{- part.title -}}
-                        </span>
-                      {%- else -%}
-                        <span>{{ part.title }}</span>
-                      {%- endif -%}
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
-
-                {%- if paginate.next -%}
-                  <li>
-                    <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">
-                      <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
-                      </svg>
-                    </a>
-                  </li>
-                {%- endif -%}
-              </ul>
-            </nav>
-          {%- endif -%}
+          {% render 'pagination', paginate: paginate, anchor: '' %}
         {%- endif -%}
       {% endpaginate %}
     </div>
 
-    <div>
-      <h2>{{ 'customer.account.details' | t }}</h2>
-
-      {{ customer.default_address | format_address }}
-
-      <a href="{{ routes.account_addresses_url }}">
-        {{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})
-      </a>
+    <div x-show="show == 'addresses'" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+      <h2 class="h1 mb-5 md:mb-10">{{ 'customer.addresses.title_account' | t }} ({{ customer.addresses_count }})</h2>
+      <ul class="flex flex-col gap-2 w-full">
+        {%- if customer.default_address -%}
+        <li class="bg-white/60 p-2 rounded flex flex-col md:flex-row gap-x-2 gap-y-3 items-start">
+          <div class="grow text-12">
+            <div class="text-label">{{ 'customer.addresses.default' | t }}</div>
+            {{ customer.default_address | format_address }}
+          </div>
+          <a class="secondary w-full md:w-auto" href="{{ routes.account_addresses_url }}">
+            {{ 'customer.account.edit_addresses' | t }} ({{ customer.addresses_count }})
+          </a>
+        </li>
+        {%- else -%}
+        <li class="">
+          <p>{{ "customer.addresses.no_address" | t }}</p>
+          <a class="primary" href="{{ routes.account_addresses_url }}">
+            {{ 'customer.account.add_addresses' | t }}
+          </a>
+        </li>
+        {%- endif -%}
+      </ul>
     </div>
+
+    <div x-show="show == 'info'" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+      <h2 class="h1 mb-5 md:mb-10">{{ 'customer.account.details' | t }}</h2>
+      <ul class="flex flex-col gap-2 w-full">
+        <li class="bg-white/60 p-2 rounded flex gap-2 items-start">
+          <div class="grow text-12">
+            {%- if customer.first_name -%}
+              <div class="text-label">Name</div>
+              <p>{{ customer.first_name }} {{ customer.last_name }}</p>
+            {%- endif -%}
+            {%- if customer.email -%}
+              <div class="text-label">Email address</div>
+              <p>{{ customer.email }}</p>
+            {%- endif -%}
+            {%- if customer.phone -%}
+              <div class="text-label">Phone number</div>
+              <p>{{ customer.phone }}</p>
+            {%- endif -%}
+            <p>{{ 'customer.account.details_html' | t: link: '/pages/contact', class: "text-black", target: "_blank" }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
@@ -154,30 +151,7 @@
 {
   "name": "t:sections.main-account.name",
   "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
-    }
+
   ]
 }
 {% endschema %}

@@ -1,0 +1,32 @@
+<div class="grid_ py-4 sm:py-5 md:py-7" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+  <h2 class="col-start-1 sm:col-start-2 col-span-full font-stan text-24 sm:text-32 md:text-40">
+    {{ section.settings.strapline }}
+  </h2>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.strapline.name",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "strapline",
+      "label": "t:sections.strapline.settings.strapline.label",
+      "default": "Wilderness running gear"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.strapline.presets.name"
+    }
+  ]
+}
+{% endschema %}

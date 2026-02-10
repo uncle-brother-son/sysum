@@ -3,213 +3,92 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor": {
-          "type": "text",
+        "title": {
+          "type": "title",
           "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
           }
         },
-        "title": {
-          "type": "title"
+        "price": {
+          "type": "price",
+          "settings": {
+          }
         },
         "caption": {
           "type": "text",
           "settings": {
-            "text": "{{ product.metafields.descriptors.subtitle.value }}",
-            "text_style": "subtitle"
+            "text": "{{ product.metafields.descriptors.subtitle.value }}"
           }
-        },
-        "price": {
-          "type": "price"
         },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
-            "picker_type": "button"
           }
         },
-        "quantity_selector": {
-          "type": "quantity_selector"
+        "72724454-80ff-4201-a1c3-06336d71dd04": {
+          "type": "inventory",
+          "settings": {
+            "inventory_threshold": 3
+          }
         },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": true
+            "show_dynamic_checkout": false
           }
         },
-        "description": {
-          "type": "description"
-        },
-        "collapsible-row-0": {
-          "type": "collapsible_tab",
+        "76c2ac28-a71e-43ae-9495-ace56f130bb0": {
+          "type": "icon-with-text",
           "settings": {
-            "heading": "Materials",
-            "icon": "leather",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-1": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Shipping & Returns",
-            "icon": "truck",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-2": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Dimensions",
-            "icon": "ruler",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-3": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Care Instructions",
-            "icon": "heart",
-            "content": "",
-            "page": ""
-          }
-        },
-        "share": {
-          "type": "share",
-          "settings": {
-            "share_label": "Share"
+            "icon": "shipping",
+            "uk": "Free UK delivery over £200",
+            "europe": "European delivery €25",
+            "worldwide": "Worldwide delivery $30"
           }
         }
       },
       "block_order": [
-        "vendor",
         "title",
-        "caption",
         "price",
+        "caption",
         "variant_picker",
-        "quantity_selector",
+        "72724454-80ff-4201-a1c3-06336d71dd04",
         "buy_buttons",
-        "description",
-        "collapsible-row-0",
-        "collapsible-row-1",
-        "collapsible-row-2",
-        "collapsible-row-3",
-        "share"
+        "76c2ac28-a71e-43ae-9495-ace56f130bb0"
       ],
       "settings": {
-        "enable_sticky_info": true,
-        "gallery_layout": "stacked",
-        "media_size": "large",
-        "constrain_to_viewport": true,
-        "mobile_thumbnails": "hide",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 12
-      }
-    },
-    "image-with-text": {
-      "type": "image-with-text",
-      "blocks": {
-        "image-with-text-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "Image with text",
-            "heading_size": "h1"
-          }
-        },
-        "image-with-text-1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "image-with-text-0",
-        "image-with-text-1"
-      ],
-      "settings": {
-        "height": "small",
-        "desktop_image_width": "medium",
-        "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-2",
-        "mobile_content_alignment": "left",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "multicolumn": {
-      "type": "multicolumn",
-      "blocks": {
-        "column-0": {
-          "type": "column",
-          "settings": {
-            "title": "Free Shipping",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column-1": {
-          "type": "column",
-          "settings": {
-            "title": "Hassle-Free Exchanges",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column-0",
-        "column-1"
-      ],
-      "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "image_width": "full",
-        "image_ratio": "adapt",
-        "columns_desktop": 2,
-        "column_alignment": "left",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "swipe_on_mobile": false,
-        "color_scheme": "background-1",
-        "columns_mobile": "1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "care": "We promote hand washing and hang drying to help reduce the amount of micro plastics getting into the oceans.",
+        "measure-chest": "Measure around your body underneath your armpits keeping the tape measure horizontal.",
+        "measure-waist": "Measure around your waist just above the hips, close to your belly button keeping the tape measure horizontal.",
+        "measure-hip": "Measure around the fullest part of your hip keeping the tape measure horizontal."
       }
     },
     "related-products": {
       "type": "related-products",
       "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "columns_desktop": 4,
-        "color_scheme": "background-1",
-        "image_ratio": "square",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 28
+        "heading": "Wear with",
+        "products_to_show": 6,
+        "show_vendor": false
+      }
+    },
+    "169ec042-07f4-44e5-9ed2-eb8032ee7913": {
+      "type": "pdp-tags",
+      "settings": {
+        "pdp-tags": "Wilderness running gear"
+      }
+    },
+    "4c4a44ee-2f16-49a0-a641-7e3f51d3458b": {
+      "type": "delivery-banner",
+      "settings": {
+        "delivery": "Free delivery over £300",
+        "returns": "Free & easy returns",
+        "worldwide": "Worldwide delivery"
       }
     }
   },
   "order": [
     "main",
-    "image-with-text",
-    "multicolumn",
-    "related-products"
+    "related-products",
+    "169ec042-07f4-44e5-9ed2-eb8032ee7913",
+    "4c4a44ee-2f16-49a0-a641-7e3f51d3458b"
   ]
 }

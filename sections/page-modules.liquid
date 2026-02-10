@@ -1,0 +1,21 @@
+
+<div class="grid_ pt-2 md:pt-3 mb-8 md:mb-10">
+  <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0">
+    <h1 class="text-center">{{ page.title | escape }}</h1>
+    {% if page.content != '' %}<div class="mt-5">{{ page.content }}</div>{% endif %}
+  </div>
+</div>
+
+{% render 'module-library', source: page %}
+{% render 'more-links-pages' %}
+
+{% schema %}
+{
+  "name": "t:sections.modules-page.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+
+  ]
+}
+{% endschema %}

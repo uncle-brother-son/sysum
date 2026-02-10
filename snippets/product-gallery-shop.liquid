@@ -1,0 +1,25 @@
+{%- liquid
+    assign shop_gallery = product.metafields.custom.shop_gallery.value
+    assign slide_num = shop_gallery.count
+-%}
+{% if shop_gallery %}  
+    <div class="block mt-10 md:mt-20 w-full overflow-hidden relative" x-intersect="$el.classList.add('scrollleft', 'ease-sysum')">
+        <div class="ml-1 md:ml-4 w-CM6 md:w-CD12"
+            x-data="slider({ slideCount: {{ slide_num }}, deskScroll: true, hasPadding: true })" 
+            x-ref="carouselView" 
+            x-init="sliderInit()"
+        >
+            <div x-ref="carouselItem" class="absolute h-0 w-CM6 md:w-CD12 md:pr-1 box-content">&nbsp;</div>
+            <ul class="flex gap-1 w-full transition-transform ease-linear transform-gpu cursor-grab"
+                x-ref="carousel"
+                @touchstart="press" @touchmove="slide" @touchend="release" @touchcancel="leave" @mousedown.prevent="press" @mousemove="slide" @mouseup="release" @mouseleave="leave" @click="click"  
+            >
+                {% for slide in shop_gallery %}
+                    <li class="flex-1 bg-sand-wet relative" x-data="{open : false}">
+                        {% render 'shop-block', object: slide, lazyLoad: 'lazy' %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,12 @@
+.github
+.nova
+.vscode
+node_modules
+src
+.gitignore
+mix-manifest.json
+package-lock.json
+package.json
+sysum.code-workspace
+tailwind.config.js
+webpack.mix.js

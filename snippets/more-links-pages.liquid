@@ -1,0 +1,31 @@
+{%- liquid
+    assign current_page = page.title
+    assign match_count = 0
+-%}
+
+<div class="grid_ my-10 md:my-20">
+    <div class="col-span-full flex justify-center">
+        <svg class="h-5 fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 30"><title>Buttercup</title>{% render 'icons' with 'buttercup' %}</svg>
+    </div>
+</div>
+
+<div class="grid_ my-20">
+  <div class="col-start-1 col-span-full md:col-start-2 md:col-span-10 flex flex-col md:flex-row justify-between gap-y-4 mx-3 md:mx-0">
+    {% for page in shop.metaobjects.more_links.info.pages.value %}
+      {% if current_page != page.title %}
+        <a href="{{ page.url }}" class="group block relative rounded md:w-CD3 bg-white/60 hover:bg-white transition-colors duration-320 ease-sysum overflow-hidden" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+          <div class="overflow-hidden rounded">
+            <picture>
+              <source media="(max-width: 767px)" srcset="{{ page.metafields.custom.feature_image_mobile.value | image_url: width: 256 }} 256w, {{ page.metafields.custom.feature_image_mobile.value | image_url: width: 810 }} 810w" sizes="(min-width: 780px) calc(25vw - 22px), calc(100vw - 64px)">
+              {{ page.metafields.custom.feature_image_desktop.value | image_url: width: 2480 | image_tag: loading: 'lazy', widths: '256, 810, 1010, 1350', sizes: '(min-width: 780px) calc(25vw - 22px), calc(100vw - 64px)', class: 'group-hover:scale-[102%] transition-transform duration-[1920ms] ease-sysum' }}
+            </picture>
+          </div>
+          <div class="p-[0.875rem] font-sysum tracking-normal text-16 text-center leading-4">
+            {{ page.title | escape }}
+          </div>
+        </a>
+      {% endif %}
+      {% if match_count == 3 %}{% break %}{% endif %}
+    {% endfor %}
+  </div>
+</div>

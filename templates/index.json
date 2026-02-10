@@ -1,211 +1,100 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "9356c18a-ab84-4490-868f-b8b58a2e40b7": {
+      "type": "image-split",
+      "settings": {
+        "image_1": "shopify://shop_images/SYSUM-Mens-Running-Clothing.jpg",
+        "text_1": "Men",
+        "link_1": "shopify://collections/mens-running-clothing",
+        "image_2": "shopify://shop_images/SYSUM-Womens-Running-Clothing.jpg",
+        "text_2": "Women",
+        "link_2": "shopify://collections/womens-running-clothing"
+      }
+    },
     "image_banner": {
       "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Image banner",
-            "heading_size": "h0"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_style": "body"
-          }
-        },
-        "button": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text",
-        "button"
-      ],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "adapt_height_first_image": false,
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "image": "shopify://shop_images/SYSUM-Running-Accessories-D.jpg",
+        "image_2": "shopify://shop_images/SYSUM-Running-Accessories-M.jpg",
+        "text": "Accessories",
+        "link": "shopify://collections/running-accessories"
       }
     },
-    "rich_text": {
+    "2dfdabd0-9338-4fb2-9a18-7b93d576a3ef": {
       "type": "rich-text",
+      "settings": {
+        "content": "Born from a love of the rugged British wilderness, <strong>SYSUM</strong> inspires exploration and connection with the wild.",
+        "link_label": "About",
+        "link_url": "shopify://pages/about"
+      }
+    },
+    "986277f6-2430-44e6-a8bd-059dd468f9d8": {
+      "type": "delivery-banner",
+      "settings": {}
+    },
+    "eb253911-be83-4bdf-bc38-3b41c0335a27": {
+      "type": "feature-links",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "5625723a-ffd3-4963-a4d5-29b11ccf4f5b": {
+          "type": "link",
           "settings": {
-            "heading": "<p>Talk about your brand</p>",
-            "heading_size": "h1"
+            "image": "shopify://shop_images/SYSUM-Packer-Shorts-D.jpg",
+            "image_2": "shopify://shop_images/SYSUM-Packer-Shorts-M.jpg",
+            "text": "Packer System",
+            "link": "shopify://blogs/journal/packer-system"
           }
         },
-        "text": {
-          "type": "text",
+        "8bd9767b-9e85-4d75-abec-929ee1fea6c8": {
+          "type": "link",
           "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>"
+            "image": "shopify://shop_images/SYSUM-Thermo-Layers-D.jpg",
+            "image_2": "shopify://shop_images/SYSUM-Thermo-Layers-M.jpg",
+            "text": "Thermo Layers",
+            "link": "shopify://blogs/journal/thermo-layers"
+          }
+        },
+        "e7b62662-a443-4231-8021-358b2e8e4e5b": {
+          "type": "link",
+          "settings": {
+            "image": "shopify://shop_images/SYSUM-Trail-Socks-D.jpg",
+            "image_2": "shopify://shop_images/SYSUM-Trail-Socks-M.jpg",
+            "text": "Trail Socks",
+            "link": "https://sysumrunning.com/collections/running-accessories?sort_by=manual&filter.p.product_type=Socks"
           }
         }
       },
       "block_order": [
-        "heading",
-        "text"
+        "5625723a-ffd3-4963-a4d5-29b11ccf4f5b",
+        "8bd9767b-9e85-4d75-abec-929ee1fea6c8",
+        "e7b62662-a443-4231-8021-358b2e8e4e5b"
       ],
-      "settings": {
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 0
-      }
+      "settings": {}
     },
-    "featured_collection": {
+    "3e890969-2862-4bd0-b522-bcab335c570d": {
       "type": "featured-collection",
       "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "background-1",
-        "show_view_all": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 28,
-        "padding_bottom": 36
-      }
-    },
-    "collage": {
-      "type": "collage",
-      "blocks": {
-        "collection-0": {
-          "type": "collection",
-          "settings": {
-            "collection": ""
-          }
-        },
-        "product": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "second_image": false
-          }
-        },
-        "collection-1": {
-          "type": "collection",
-          "settings": {
-            "collection": ""
-          }
-        }
-      },
-      "block_order": [
-        "collection-0",
-        "product",
-        "collection-1"
-      ],
-      "settings": {
-        "heading": "Multimedia collage",
-        "heading_size": "h2",
-        "desktop_layout": "left",
-        "mobile_layout": "collage",
-        "color_scheme": "background-1",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "video": {
-      "type": "video",
-      "settings": {
-        "heading": "",
-        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-        "heading_size": "h1",
-        "description": "",
-        "full_width": false,
-        "color_scheme": "background-1",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "multicolumn": {
-      "type": "multicolumn",
-      "blocks": {
-        "column1": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column2": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column3": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column1",
-        "column2",
-        "column3"
-      ],
-      "settings": {
         "title": "",
-        "heading_size": "h1",
-        "image_width": "third",
-        "image_ratio": "adapt",
-        "columns_desktop": 3,
-        "column_alignment": "center",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "swipe_on_mobile": false,
-        "color_scheme": "background-1",
-        "columns_mobile": "1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "collection": "frontpage",
+        "products_to_show": 10,
+        "show_vendor": false
       }
     }
   },
   "order": [
+    "9356c18a-ab84-4490-868f-b8b58a2e40b7",
     "image_banner",
-    "rich_text",
-    "featured_collection",
-    "collage",
-    "video",
-    "multicolumn"
+    "2dfdabd0-9338-4fb2-9a18-7b93d576a3ef",
+    "eb253911-be83-4bdf-bc38-3b41c0335a27",
+    "3e890969-2862-4bd0-b522-bcab335c570d",
+    "986277f6-2430-44e6-a8bd-059dd468f9d8"
   ]
 }

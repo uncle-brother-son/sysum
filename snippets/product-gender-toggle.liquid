@@ -1,0 +1,19 @@
+
+
+{% if product.metafields.custom.other_gender %}
+
+  {% assign p_gender = product.title | split: " " | first | strip %}
+
+  <div class="w-full mb-3">
+    <ul class="toggle-round self-start">
+      {% if  p_gender == "Women's"%}
+      <li class="selected"><span>Women</span></li>
+      <li><a href="{{ product.metafields.custom.other_gender.value.url }}">Men</a></li>
+      {% else %}
+      <li><a href="{{ product.metafields.custom.other_gender.value.url }}">Women</a></li>
+      <li class="selected"><span>Men</span></li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% endif %}

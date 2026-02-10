@@ -1,11 +1,6 @@
-{{ 'component-cart.css' | asset_url | stylesheet_tag }}
-{{ 'component-totals.css' | asset_url | stylesheet_tag }}
-{{ 'component-price.css' | asset_url | stylesheet_tag }}
-{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
-
-<div class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
-  <div>
-    <div class="cart__footer">
+<div id="main-cart-footer" data-id="{{ section.id }}" class="sticky top-6 text-12 flex flex-col gap-4 {% if cart == empty %}is-empty{% endif %}" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+  <div class="cart__footer bg-white/60 rounded p-2">
+      
       {%- if settings.show_cart_note -%}
         <cart-note class="cart__note field">
           <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
@@ -17,81 +12,98 @@
             placeholder="{{ 'sections.cart.note' | t }}"
           >{{ cart.note }}</textarea>
         </cart-note>
-      {%- endif -%}
+      {%- endif  -%}
 
-      <div class="cart__blocks">
-        {% for block in section.blocks %}
-          {%- case block.type -%}
-            {%- when '@app' -%}
-              {% render block %}
-            {%- when 'subtotal' -%}
-              <div class="js-contents" {{ block.shopify_attributes }}>
-                <div class="totals">
-                  <h2 class="totals__subtotal">{{ 'sections.cart.subtotal' | t }}</h2>
-                  <p class="totals__subtotal-value">{{ cart.total_price | money_with_currency }}</p>
-                </div>
+      <div class="flex flex-col gap-3">
+        <div class="js-contents flex flex-col gap-2">
+          <div class="text-label mb-0">{{ 'sections.cart.headings.summary' | t }}</div>
 
-                <div>
-                  {%- if cart.cart_level_discount_applications.size > 0 -%}
-                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                      {%- for discount in cart.cart_level_discount_applications -%}
-                        <li class="discounts__discount discounts__discount--position">
-                          {%- render 'icon-discount' -%}
-                          {{ discount.title }}
-                          (-{{ discount.total_allocated_amount | money }})
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  {%- endif -%}
-                </div>
+          <div class="items flex gap-1">
+            <div class="totals__subtotal grow">{{ 'sections.cart.headings.items' | t }}</div>
+            <div class="totals__subtotal-value text-right"> {{ cart.item_count }} </div>
+          </div>
 
-                <small class="tax-note caption-large rte">
-                  {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                    {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                  {%- elsif cart.taxes_included -%}
-                    {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-                  {%- elsif shop.shipping_policy.body != blank -%}
-                    {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                  {%- else -%}
-                    {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
-                  {%- endif -%}
-                </small>
-              </div>
-            {%- else -%}
-              <div class="cart__ctas" {{ block.shopify_attributes }}>
-                <noscript>
-                  <button type="submit" class="cart__update-button button button--secondary" form="cart">
-                    {{ 'sections.cart.update' | t }}
-                  </button>
-                </noscript>
+          <div class="subtotals flex gap-1">
+            <div class="totals__subtotal grow">{{ 'sections.cart.headings.subtotal' | t }}</div>
+            <div class="totals__subtotal-value text-right"> {{ cart.items_subtotal_price | money }} </div>
+          </div>
 
-                <button
-                  type="submit"
-                  id="checkout"
-                  class="cart__checkout-button button"
-                  name="checkout"
-                  {% if cart == empty %}
-                    disabled
-                  {% endif %}
-                  form="cart"
-                >
-                  {{ 'sections.cart.checkout' | t }}
-                </button>
-              </div>
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <li class="discounts__discount discounts__discount--position flex gap-1">
+                  <div class="grow flex gap-0.5 items-center text-slate">
+                    <svg class="icon-tag fill-slate/60 !h-[0.9rem] !w-[0.9rem]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Bag</title>{% render 'icons' with 'icon-tag' %}</svg>
+                    <span>{{ discount.title }}</span>
+                  </div>
+                  <div class="text-clay">-{{ discount.total_allocated_amount | money }}</div>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
 
-              {%- if additional_checkout_buttons -%}
-                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
-                  {{ content_for_additional_checkout_buttons }}
-                </div>
-              {%- endif -%}
-          {%- endcase -%}
-        {% endfor %}
+          {%- liquid 
+            assign free_delivery_threshold = shop.metaobjects.markets[cart.currency.iso_code].value 
+            assign total_price_formatted = cart.original_total_price | divided_by: 100
+            if total_price_formatted >= free_delivery_threshold
+              assign delivery_value = "Free"
+              assign total_price = cart.total_price
+            else
+              assign delivery_value = shop.metaobjects.markets[cart.currency.iso_code].cost | money 
+              assign total_price = cart.total_price | plus: shop.metaobjects.markets[cart.currency.iso_code].cost
+            endif
+          -%}
+          <div class="flex flex-col gap-0.5">
+            <div class="delivery flex gap-1">
+              <div class="grow">{{ 'sections.cart.headings.delivery_html' | t }}</div>
+              <div class="text-right">{{ delivery_value }}</div>
+            </div>
+            {%- if total_price_formatted < free_delivery_threshold -%}
+              <span class="text-12 ">(Free standard delivery on orders above {{ cart.currency.symbol }}{{ shop.metaobjects.markets[cart.currency.iso_code].value }})</span>
+            {%- endif -%}
+          </div>
 
-        <div id="cart-errors"></div>
+          <div class="totals flex gap-1">
+            <div class="grow font-bold">{{ 'sections.cart.headings.total' | t }}</div>
+            <div class="text-right font-bold">{{ total_price | money }}</div>
+          </div>
+
+        </div>
+      
+        <div class="cart__ctas">
+          <button type="submit" id="checkout" class="cart__checkout-button button primary w-full" name="checkout" {% if cart == empty %}disabled{% endif %} form="cart-form">
+            {{ 'sections.cart.checkout_button' | t }}
+          </button>
+        </div>
+
+        {%- if additional_checkout_buttons -%}
+          <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+            {{ content_for_additional_checkout_buttons }}
+          </div>
+        {%- endif -%}
+
+        {%- render 'payment-list' -%}
+
       </div>
-    </div>
   </div>
+
+  <div class="px-1 md:px-2 flex flex-col gap-2">
+    <p>If you have any questions, please <a href="/pages/contact" target="_blank">get in touch</a>.</p>
+    {% comment %} <div class="tax-note caption-large rte">
+      {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+        {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+      {%- elsif cart.taxes_included -%}
+        {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+      {%- elsif shop.shipping_policy.body != blank -%}
+        {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+      {%- else -%}
+        {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+      {%- endif -%}
+    </div> {% endcomment %}
+  </div>
+
 </div>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -116,22 +128,6 @@
 
 {% schema %}
 {
-  "name": "t:sections.main-cart-footer.name",
-  "class": "cart__footer-wrapper",
-  "blocks": [
-    {
-      "type": "subtotal",
-      "name": "t:sections.main-cart-footer.blocks.subtotal.name",
-      "limit": 1
-    },
-    {
-      "type": "buttons",
-      "name": "t:sections.main-cart-footer.blocks.buttons.name",
-      "limit": 1
-    },
-    {
-      "type": "@app"
-    }
-  ]
+  "class": "cart__footer-wrapper"
 }
 {% endschema %}

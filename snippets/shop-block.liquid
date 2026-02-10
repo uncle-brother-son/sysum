@@ -1,0 +1,65 @@
+{%- liquid 
+    if template == 'product'
+        assign sizes = '(min-width: 780px) calc(100vw - 64px), calc(100vw - 24px)'
+        assign widths = '275, 860, 1316, 1500, 1730, 1936, 2120, 2350, 2560, 2760'
+    elsif template == 'article'
+        if number == 1
+            assign sizes = '(min-width: 780px) calc(100vw - 64px), calc(100vw - 24px)'
+            assign widths = '720, 1280, 1660, 1970, 2240, 2480'
+        elsif number == 2
+            assign sizes = '(min-width: 780px) calc(50vw - 36px), calc(100vw - 16px)'
+            assign widths = '285, 800, 1100, 1340, 1530, 1710, 1870, 2020, 2150, 2280, 2400, 2520, 2630, 2736'
+        elsif number == 3
+            assign sizes = '(min-width: 780px) calc(33.33vw - 27px), calc(100vw - 16px)'
+            assign widths = '256, 670, 907, 1190, 1420, 1620, 1790, 1950'
+        endif
+    endif
+-%}
+{% if object.image_mobile.value %}
+    <picture>
+        <source media="(max-width: 767px)" srcset="{{ object.image_mobile.value.src | image_url: width: 488 }} 488w, {{ object.image_mobile.value.src | image_url: width: 767 }} 767w " sizes="{{ sizes }}">
+        {{ object.image_desktop.value.src | image_url: width: object.image_desktop.value.width | image_tag: loading: lazy_load, width: object.image_desktop.value.width, widths: widths, sizes: sizes }}
+    </picture>
+{% else %}
+    {% assign image_height = object.image_desktop.value.width | divided_by: object.image_desktop.value.aspect_ratio %}
+    {{ object.image_desktop.value.src | image_url: width: object.image_desktop.value.width | image_tag: loading: lazy_load, width: object.image_desktop.value.width, height: image_height, widths: widths, sizes: sizes }}
+{% endif %}
+
+{% if object.products.value %}
+  <div class="absolute bottom-1 md:bottom-2 left-1 md:left-2 right-1 md:right-auto">
+      {% for tile in object.products.value %} 
+        {% if product.id != tile.id %}
+          {% assign rdelay = '80' | times: forloop.rindex %}
+          {% assign delay = '80' | times: forloop.index %}
+                    
+          <a href="{{ tile.url }}" 
+              class="text-12 mb-1 p-1 pr-2 flex gap-1 bg-sand-wet/60 backdrop-blur rounded hover:bg-sand-wet transition duration-640 ease-sysum"
+              x-show="open" 
+              x-transition:enter="delay-{{ rdelay }} duration-480 md:duration-320"
+              x-transition:enter-start="translate-y-0.5 opacity-0"
+              x-transition:enter-end="translate-y-0 opacity-1"
+              x-transition:leave="delay-{{ delay }} duration-480 md:duration-320"
+              x-transition:leave-start="translate-y-0 opacity-1"
+              x-transition:leave-end="translate-y-0.5 opacity-0"
+          >
+              <div class="w-7">
+                  <img src="{{ tile.images[1] | image_url: width: 300 }}" alt="{{ tile.images[1].alt | escape }}" loading="lazy" width="150" height="{{ 150 | divided_by: tile.images[1].aspect_ratio | ceil }}" >
+              </div>
+              <div class="flex flex-col">
+                <span>{{ tile.title }}</span>
+                <div class="flex flex-row gap-1">
+                    {% render 'price', product: tile, price_class: 'text-12' %}
+                    {% if tile.available == false %}<span class="text-slate text-12 uppercase self-end">{{- 'products.product.sold_out' | t -}}</span>{% endif %}
+                </div>
+              </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+      <button 
+          class="grow-0  flex-none p-1 bg-sand-wet/60 backdrop-blur rounded hover:bg-sand-wet transition-colors duration-640 ease-sysum"
+          @click="open = !open"
+      >
+          <svg class="icon-close transition duration-320" :class="open ? 'rotate-0' : 'rotate-45'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Shop the look</title>{% render 'icons' with 'icon-close-bold' %}</svg>
+      </button>
+  </div>
+{% endif %}

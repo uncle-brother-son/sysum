@@ -1,0 +1,64 @@
+{
+  "sections": {
+    "main": {
+      "type": "product-gift-card",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false
+          }
+        },
+        "76c2ac28-a71e-43ae-9495-ace56f130bb0": {
+          "type": "icon-with-text",
+          "settings": {
+            "icon": "email",
+            "gift-card": "Gift cards are delivered by email"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "buy_buttons",
+        "76c2ac28-a71e-43ae-9495-ace56f130bb0"
+      ],
+      "settings": {
+      }
+    },
+    "169ec042-07f4-44e5-9ed2-eb8032ee7913": {
+      "type": "pdp-tags",
+      "settings": {
+      }
+    },
+    "4c4a44ee-2f16-49a0-a641-7e3f51d3458b": {
+      "type": "delivery-banner",
+      "settings": {
+        "delivery": "Free delivery over £100",
+        "returns": "Free & easy returns",
+        "worldwide": "Worldwide delivery"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "169ec042-07f4-44e5-9ed2-eb8032ee7913",
+    "4c4a44ee-2f16-49a0-a641-7e3f51d3458b"
+  ]
+}

@@ -1,0 +1,165 @@
+<div
+    class="drawer_container fixed inset-0 bg-blend-luminosity backdrop-filter backdrop-blur bg-black/30 z-[999]" 
+    x-show="showInfo != ''"
+    x-transition:enter="transition duration-640 ease-sysum"
+    x-transition:enter-start="backdrop-opacity-0 bg-transparent"
+    x-transition:enter-end="backdrop-opacity-100 bg-black/30"
+    x-transition:leave="transition delay-320 duration-640 ease-sysum"
+    x-transition:leave-start="backdrop-opacity-100 bg-black/30"
+    x-transition:leave-end="backdrop-opacity-0 bg-transparent"
+    >
+    <div
+      class="drawer absolute h-full w-full sm:w-[480px] md:w-[600px] bg-sand top-0 right-0 z-[1000] overflow-hidden"  
+      x-show="showInfo != ''"
+      x-trap="showInfo"
+      @click.outside="showInfo = '', $dispatch('lock-screen', false)"
+      x-transition:enter="transition duration-480 md:duration-320 ease-sysum"
+      x-transition:enter-start="translate-x-full"
+      x-transition:enter-end="translate-x-0"
+      x-transition:leave="transition delay-160 duration-480 md:duration-320 ease-sysum"
+      x-transition:leave-start="translate-x-0"
+      x-transition:leave-end="translate-x-full"
+      >
+      <div class="drawer_tab"
+        x-show="showInfo == 'uk' || showInfo == 'worldwide'"
+        x-transition:enter="transition delay-400 md:delay-320 duration-320 ease-sysum"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-1"
+        x-transition:leave="transition duration-160 ease-sysum"
+        x-transition:leave-start="opacity-1"
+        x-transition:leave-end="opacity-0"
+        >
+            <div class="drawer_header bg-sand">
+                <div class="h2 absolute top-3 md:top-4 left-2 md:left-5">Delivery & Returns</div>
+                <button class="close tabfocus" @click="showInfo = '', $dispatch('lock-screen', false)" aria-label="{{ 'accessibility.close' | t }}">
+                    <span class="p-1">
+                        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Close</title>{% render 'icons' with 'icon-close-bold' %}</svg>
+                    </span>
+                </button>
+            </div>
+            <section class="grow overflow-auto">
+                <div class="grow overflow-auto">
+                    <div class="mx-2 md:mx-5 mb-6 text-12">
+                        <ul class="flex md:gap-0.5 text-center bg-white p-0.5 rounded" role="list">
+                            <li class="flex-1 flex"><button class="flex-1 py-1 cursor-pointer rounded leading-[1.5rem] transition duration-320" :class="showInfo == 'uk' ? 'bg-sand' : ''" @click="showInfo = 'uk'">UK</button></li>
+                            <li class="flex-1 flex"><button class="flex-1 py-1 cursor-pointer rounded leading-[1.5rem] transition duration-320" :class="showInfo == 'worldwide' ? 'bg-sand' : ''" @click="showInfo = 'worldwide'">Worldwide</button></li>
+                        </ul>
+                        <div id="ukDelivery" x-show="showInfo == 'uk'" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+                            <div class="flex flex-col gap-5 py-5">
+                                <div class="flex flex-col gap-2">
+                                    <div class="font-bold">{{ shop.metaobjects.delivery.standard-uk.header }}</div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.standard-uk.cost.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.standard-uk.duration.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <div class="font-bold">{{ shop.metaobjects.delivery.express-uk.header }}</div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.express-uk.cost.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.express-uk.duration.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {{ shop.metaobjects.delivery.express-uk.description | metafield_tag }}
+                            </div>
+                            <hr/>
+                            <div class="flex flex-col gap-5 py-5">
+                                <div class="flex flex-col gap-2">
+                                    <div class="font-bold">{{ shop.metaobjects.returns.returns-uk.header }}</div>
+                                    {{ shop.metaobjects.returns.returns-uk.description | metafield_tag }}
+                                </div>
+                            </div>
+                        </div>
+                        <div id="worldwideDelivery" x-show="showInfo == 'worldwide'" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+                            <div class="flex flex-col gap-5 py-5">
+                                <div class="flex flex-col gap-2">
+                                    <div class="font-bold">{{ shop.metaobjects.delivery.standard-worldwide.header }}</div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.standard-worldwide.cost.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {% for row in shop.metaobjects.delivery.standard-worldwide.duration.value %}
+                                            {% assign col = row | split: "|" %}
+                                            <div class="flex gap-5 justify-between items-end"><div class="text-left">{{ col[0] }}</div><div class="text-right whitespace-nowrap">{{ col[1] }}</div></div>
+                                        {% endfor %}
+                                    </div>
+                                    {{ shop.metaobjects.delivery.standard-worldwide.description | metafield_tag }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="flex flex-col gap-5 py-5">
+                                <div class="flex flex-col gap-3">
+                                    <div class="font-bold">{{ shop.metaobjects.returns.returns-worldwide.header }}</div>
+                                    {{ shop.metaobjects.returns.returns-worldwide.description | metafield_tag }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        {% if template == 'product' %}
+        <div class="drawer_tab"
+            x-show="showInfo == 'measurement'"
+            x-transition:enter="transition delay-400 md:delay-320 duration-320 ease-sysum"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-1"
+            x-transition:leave="transition duration-160 ease-sysum"
+            x-transition:leave-start="opacity-1"
+            x-transition:leave-end="opacity-0"
+            >
+                <div class="drawer_header bg-sand">
+                    <div class="h2 absolute top-3 md:top-4 left-2 md:left-5">How to measure</div>
+                    <button class="close tabfocus" @click="showInfo = '', $dispatch('lock-screen', false)" aria-label="{{ 'accessibility.close' | t }}">
+                        <span class="p-1">
+                        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Close</title>{% render 'icons' with 'icon-close-bold' %}</svg>
+                        </span>
+                    </button>
+                </div>
+                <section class="grow overflow-auto">
+                    <div class="grow overflow-auto">
+                        <div class="mx-2 md:mx-5 mb-6 flex flex-col gap-5 text-12" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+                            <div class="flex flex-col md:flex-row gap-1" >
+                                <div class="flex-1 flex flex-col gap-5">
+                                    {% assign list_num = shop.metaobjects.measurement_info.measurement-info.header.value.size %}
+                                    {% for i in (1..list_num) %}
+                                        {% assign index = i | minus: 1 %}
+                                        <div class="flex flex-col gap-1">
+                                            <div class="font-bold">{{ shop.metaobjects.measurement_info.measurement-info.header.value[index] }}</div>
+                                            <div>{{ shop.metaobjects.measurement_info.measurement-info.description.value[index] }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="flex-1">
+                                    <img src="{{ shop.metaobjects.measurement_info.measurement-info.image | image_url: width: 300 }}" alt="{{ product.images[1].alt | escape }}" loading="lazy" width="150" height="{{ 150 | divided_by: shop.metaobjects.measurement_info.measurement-info.image.aspect_ratio | ceil }}" >
+                                </div>
+                            </div>
+                            <p>{{ shop.metaobjects.measurement_info.measurement-info.message.value | newline_to_br }}</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        {% endif %}
+
+    </div>
+</div>

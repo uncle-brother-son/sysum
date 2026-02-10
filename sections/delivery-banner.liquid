@@ -1,0 +1,45 @@
+{% assign message = shop.metaobjects.delivery_tab.delivery-banner.list.value %}
+<div class="mx-2 md:mx-4 my-20 md:my-30 flex justify-center items-center flex-col md:flex-row gap-2 md:gap-1" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+  <div class="flex justify-left md:justify-center w-CM3 md:w-CD3 lg:w-CD2"> 
+    <button @click="showInfo = 'uk', $dispatch('lock-screen', true)" class="group flex flex-row gap-1 items-center">
+      <svg class="info-shipping w-3 fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ section.settings.delivery | remove: "-" }}</title>{% render 'icons' with 'info-shipping' %}</svg>
+      {% assign local_delivery = message[0] | split: "|" %}
+      <span class="text-link text-12 group-hover:border-black">{% if cart.currency.iso_code == 'GBP' %}{{ local_delivery[0] }}{% elsif cart.currency.iso_code == 'EUR' %}{{ local_delivery[1] }}{% else %}{{ local_delivery[2] }}{% endif %}</span>
+    </button>
+  </div>
+  <div class="flex justify-left md:justify-center w-CM3 md:w-CD3 lg:w-CD2"> 
+    <button @click="showInfo = 'uk', $dispatch('lock-screen', true)" class="group flex flex-row gap-1 items-center">
+      <svg class="info-returns w-3 fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ section.settings.returns | remove: "-" }}</title>{% render 'icons' with 'info-returns' %}</svg>
+      {% assign local_returns = message[1] | split: "|" %}
+      <span class="text-link text-12 group-hover:border-black">{% if cart.currency.iso_code == 'GBP' %}{{ local_returns[0] }}{% else %}{{ local_returns[1] }}{% endif %}</span>
+    </button>  
+  </div>
+  <div class="flex justify-left md:justify-center w-CM3 md:w-CD3 lg:w-CD2"> 
+    <button @click="showInfo = 'worldwide', $dispatch('lock-screen', true)" class="group flex flex-row gap-1 items-center">
+      <svg class="info-global w-3 fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>{{ section.settings.worldwide | remove: "-" }}</title>{% render 'icons' with 'info-global' %}</svg>
+      <span class="text-link text-12 group-hover:border-black">{{ message[2] }}</span>
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.delivery-banner.name",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+
+  ],
+  "presets": [
+    {
+      "name": "t:sections.delivery-banner.presets.name"
+    }
+  ]
+}
+{% endschema %}

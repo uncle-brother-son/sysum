@@ -1,0 +1,56 @@
+{%- liquid
+  assign image_height = card_product.featured_media.width | divided_by: card_product.featured_media.aspect_ratio
+  assign sizes = '(min-width: 780px) calc(16.67vw - 17px), calc(33.48vw - 11px)'
+-%}
+
+<div class="card__inner relative" x-data="{ showImage:true }" {%- if template == 'collection' -%} x-intersect="$el.classList.add('scrollin', 'ease-sysum')" {%- endif -%}>
+  <div class="card__media relative">
+      <a
+        class="block"
+        href="{{ card_product.url }}"
+        id="CardLink-{{ section_id }}-{{ card_product.id }}"
+        aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"
+        @mouseover="isMobile === true ? showImage = true : showImage = false"
+        @mouseleave="showImage = true"
+      >
+        <img
+          srcset="
+            {{ card_product.media[1] | image_url: width: 165 }} 165w,
+            {{ card_product.media[1] | image_url: width: 360 }} 360w,
+            {{ card_product.media[1] | image_url: width: 533 }} 533w,
+            {{ card_product.media[1] | image_url: width: 720 }} 720w,
+            {{ card_product.media[1] | image_url: width: 940 }} 940w,
+            {{ card_product.media[1] | image_url: width: 1066 }} 1066w
+          "
+          src="{{ card_product.media[1] | image_url: width: 1066 }}"
+          sizes="{{ sizes }}"
+          alt="{{ card_product.featured_media.alt | escape }}"
+          {% unless lazy_load == false %}
+            loading="lazy"
+          {% endunless %}
+          width="{{ card_product.media[1].width }}"
+          height="{{ image_height }}"
+          x-show="showImage"
+          x-transition.opacity.duration.320ms
+          class="absolute top-0 left-0 motion-reduce"
+        >
+        <img
+          srcset="
+            {{ card_product.featured_media | image_url: width: 165 }} 165w,
+            {{ card_product.featured_media | image_url: width: 360 }} 360w,
+            {{ card_product.featured_media | image_url: width: 533 }} 533w,
+            {{ card_product.featured_media | image_url: width: 720 }} 720w,
+            {{ card_product.featured_media | image_url: width: 940 }} 940w,
+            {{ card_product.featured_media | image_url: width: 1066 }} 1066w
+          "
+          src="{{ card_product.featured_media | image_url: width: 1066 }}"
+          sizes="{{ sizes }}"
+          alt="{{ card_product.featured_media.alt | escape }}"
+          class="motion-reduce"
+          loading="lazy"
+          width="{{ card_product.featured_media.width }}"
+          height="{{ image_height }}"
+        >
+      </a>
+  </div>
+</div>

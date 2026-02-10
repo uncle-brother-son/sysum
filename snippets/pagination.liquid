@@ -11,64 +11,23 @@
   - anchor: {String} (optional) This can be added so that on page reload it takes you to wherever you've placed your anchor tag.
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'component-pagination.css' | asset_url }}" media="print" onload="this.media='all'">
-<noscript>{{ 'component-pagination.css' | asset_url | stylesheet_tag }}</noscript>
-
 {%- if paginate.parts.size > 0 -%}
-  <div class="pagination-wrapper">
-    <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-      <ul class="pagination__list list-unstyled" role="list">
-        {%- if paginate.previous -%}
+  <div class="pagination-wrapper pb-8 md:pb-10 text-center" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+    <nav class="pagination inline-block" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+      <ul class="bg-white rounded flex" role="list">
           <li>
-            <a
-              href="{{ paginate.previous.url }}{{ anchor }}"
-              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
-              aria-label="{{ 'general.pagination.previous' | t }}"
-            >
-              {% render 'icon-caret' %}
-            </a>
+            <button class="p-1 group" onclick="window.location.href='{{ paginate.previous.url }}{{ anchor }}';" aria-label="{{ 'general.pagination.previous' | t }}" {%- if paginate.previous -%} {%- else -%} disabled {%- endif -%}>
+              <svg class="icon-chevron-left transition-all duration-320 group-disabled:fill-pebble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Previous Page</title>{% render 'icons' with 'icon-chevron-regular-left' %}</svg>
+            </button>
           </li>
-        {%- endif -%}
-
-        {%- for part in paginate.parts -%}
+          <li class="text-center text-12 px-2 self-center">
+            {{ paginate.current_page }} / {{ paginate.pages }}
+          </li>
           <li>
-            {%- if part.is_link -%}
-              <a
-                href="{{ part.url }}{{ anchor }}"
-                class="pagination__item link"
-                aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
-              >
-                {{- part.title -}}
-              </a>
-            {%- else -%}
-              {%- if part.title == paginate.current_page -%}
-                <a
-                  role="link"
-                  aria-disabled="true"
-                  class="pagination__item pagination__item--current light"
-                  aria-current="page"
-                  aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
-                >
-                  {{- part.title -}}
-                </a>
-              {%- else -%}
-                <span class="pagination__item">{{ part.title }}</span>
-              {%- endif -%}
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
-
-        {%- if paginate.next -%}
-          <li>
-            <a
-              href="{{ paginate.next.url }}{{ anchor }}"
-              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
-              aria-label="{{ 'general.pagination.next' | t }}"
-            >
-              {%- render 'icon-caret' -%}
-            </a>
-          </li>
-        {%- endif -%}
+            <button class="p-1 group" onclick="window.location.href='{{ paginate.next.url }}{{ anchor }}';" aria-label="{{ 'general.pagination.next' | t }}" {%- if paginate.next -%} {%- else -%} disabled {%- endif -%}>
+              <svg class="icon-chevron-right transition-all duration-320 group-disabled:fill-pebble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Next Page</title>{% render 'icons' with 'icon-chevron-regular-right' %}</svg>
+            </button>
+          </li>       
       </ul>
     </nav>
   </div>

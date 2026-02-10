@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+@font-face { font-display:swap; font-family:UniversalSans; src:url(https://sysumrunning.com/cdn/shop/t/13/assets/Universal-Sans-Display-400.woff2) format("woff2"); }
+@font-face { font-display:swap; font-family:UniversalSansBold; src:url(https://sysumrunning.com/cdn/shop/t/13/assets/Universal-Sans-Display-600.woff2) format("woff2"); }
+@font-face { font-display:swap; font-family:Sysum; src:url(https://sysumrunning.com/cdn/shop/t/13/assets/Sysum-Medium.woff2) format("woff2"); }
+@font-face { font-display:swap; font-family:SysumBold; src:url(https://sysumrunning.com/cdn/shop/t/13/assets/Sysum-Bold.woff2) format("woff2"); }
+
+a, a:hover { text-decoration:none; }

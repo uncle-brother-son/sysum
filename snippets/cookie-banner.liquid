@@ -1,0 +1,78 @@
+<div id="cookies-banner" class="fixed right-0 bottom-0 left-0 flex justify-center z-[999]" 
+    x-data="cookiesBanner()" 
+    x-show="showBanner" 
+    x-init="cookieBannerInit()"
+    @manage-cookies.window="showBanner = true, cookieControl = true, showSettings()"
+    x-transition:enter="transition delay-320 duration-640 ease-sysum"
+    x-transition:enter-start="translate-y-full"
+    x-transition:enter-end="translate-y-0"
+    x-transition:leave="transition duration-320 ease-sysum"
+    x-transition:leave-start="translate-y-0"
+    x-transition:leave-end="translate-y-full"
+>
+    <div class="mx-2 md:mx-0 w-full md:w-CD8 lg:w-CD6 xl:w-CD4 bg-white rounded-t p-3 text-12 transition duration-320 ease-sysum">
+        <div x-show="!cookieControl" class="flex flex-col gap-3">
+            <div>{{ 'cookie_banner.copy_html' | t: link1: '/pages/privacy-policy', link2: '/pages/cookie-policy', target: '_blank' }}</div>
+            <div class="flex flex-col md:flex-row gap-1">
+                <button class="flex-none px-5 py-1" @click="cookieDecline()"><span class="text-12 a">{{ 'cookie_banner.button_reject_all' | t }}</span></button>
+                <button class="secondary flex-1 !px-0" @click="managePreferences()">{{ 'cookie_banner.button_manage' | t }}</button>
+                <button class="primary flex-1 !px-0" @click="cookieAcceptAll()">{{ 'cookie_banner.button_accept_all' | t }}</button>
+            </div>
+        </div>
+        <div x-show="cookieControl" class="flex flex-col gap-2 md:gap-3 h-[540px] md:h-auto">
+            <div class="flex gap-2 items-start">
+                <div class="h2 grow">Cookie preferences</div>
+                <button class="close relative tabfocus" @click="cookieControl = false" aria-label="{{ 'accessibility.close' | t }}">
+                    <span class="p-1">
+                        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Close</title>{% render 'icons' with 'icon-close-bold' %}</svg>
+                    </span>
+                </button>
+            </div>
+            <div class=" flex flex-col gap-3 overflow-auto overscroll-none">
+                <div>We use technology such as “cookies” to collect information and store your online preferences. By managing your Cookie Preferences you can enable or disable a specific set of cookies, based on a predefined categorisation.</div>
+                <div class="flex gap-2">
+                    <div class="flex flex-col gap-0.5 grow">
+                        <div class="h3">Strictly necessary cookies</div>
+                        <div>These cookies are required for the site to function and for necessary activities like protecting against fraud.</div>
+                    </div>
+                    <div class="font-unis text-12 flex-none">Always Active</div>
+                </div>
+                <div class="flex gap-2">
+                    <div class="flex flex-col gap-0.5 grow">
+                        <div class="h3">Performance cookies</div>
+                        <div>These cookies help to understand how you interact with the site and what types of content are valuable to you.</div>
+                    </div>
+                    <label class="switch flex-none">
+                        <input x-ref="analytics" type="checkbox" @click.prevent="setCookie('analytics')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex gap-2">
+                    <div class="flex flex-col gap-0.5 grow">
+                        <div class="h3">Functional cookies</div>
+                        <div>These cookies help remember your preferences, like your country or language, to personalize your next visits to the website.</div>
+                    </div>
+                    <label class="switch flex-none">
+                        <input x-ref="preferences" type="checkbox" @click.prevent="setCookie('preferences')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex gap-2">
+                    <div class="flex flex-col gap-0.5 grow">
+                        <div class="h3">Advertising cookies</div>
+                        <div>These cookies are used to provide ads on other sites and marketing communications based on your interests.</div>
+                    </div>
+                    <label class="switch flex-none">
+                        <input x-ref="marketing" type="checkbox" @click.prevent="setCookie('marketing')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row gap-1">
+                <button class="flex-none px-5 py-1" @click="cookieDecline()"><span class="text-12 a">{{ 'cookie_banner.button_reject_all' | t }}</span></button>
+                <button class="primary flex-1 !px-0" @click="showBanner = false">{{ 'cookie_banner.button_my_choice' | t }}</button>
+                <button class="primary flex-1 !px-0" @click="cookieAcceptAll()">{{ 'cookie_banner.button_accept_all' | t }}</button>
+            </div>
+        </div>
+    </div>
+</div>

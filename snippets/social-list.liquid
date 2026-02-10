@@ -1,0 +1,62 @@
+{%- if settings.social_instagram_link != blank -%}
+    <li>
+    <a class="social_link" href="{{ settings.social_instagram_link }}" target="_blank" rel="nofollow">
+        <svg class="social-instagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.instagram' | t }}</title>{% render 'icons' with 'social-instagram' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.instagram' | t }}</span>
+    </a>
+    </li>
+{%- endif -%}
+{%- if settings.social_tiktok_link != blank -%}
+    <li>
+        <a class="social_link" href="{{ settings.social_tiktok_link }}" target="_blank" rel="nofollow">
+        <svg class="social-tiktok" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.tiktok' | t }}</title>{% render 'icons' with 'social-tiktok' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.tiktok' | t }}</span>
+        </a>
+    </li>
+    {%- endif -%}
+{%- if settings.social_facebook_link != blank -%}
+    <li>
+    <a class="social_link" href="{{ settings.social_facebook_link }}" target="_blank" rel="nofollow">
+        <svg class="social-facebook" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.facebook' | t }}</title>{% render 'icons' with 'social-facebook' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.facebook' | t }}</span>
+    </a>
+    </li>
+{%- endif -%}
+{%- if settings.social_youtube_link != blank -%}
+    <li>
+    <a class="social_link" href="{{ settings.social_youtube_link }}" target="_blank" rel="nofollow">
+        <svg class="social-youtube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.youtube' | t }}</title>{% render 'icons' with 'social-youtube' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.youtube' | t }}</span>
+    </a>
+    </li>
+{%- endif -%}
+{%- if settings.social_soundcloud_link != blank -%}
+    <li>
+    <a class="social_link" href="{{ settings.social_soundcloud_link }}" target="_blank" rel="nofollow">
+        <svg class="social-soundcloud" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.soundcloud' | t }}</title>{% render 'icons' with 'social-soundcloud' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.soundcloud' | t }}</span>
+    </a>
+    </li>
+{%- endif -%}
+{%- if settings.social_strava_link != blank -%}
+    <li>
+    <a class="social_link" href="{{ settings.social_strava_link }}" target="_blank" rel="nofollow">
+        <svg class="social-strava" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>{{ 'general.social.links.strava' | t }}</title>{% render 'icons' with 'social-strava' %}</svg>
+        <span class="visually_hidden">{{ 'general.social.links.strava' | t }}</span>
+    </a>
+    </li>
+{%- endif -%}
+
+{% comment %}
+    // full icon list
+    instagram
+    facebook
+    youtube
+    soundcloud
+    strava
+    twitter
+    ticktok
+{% endcomment %}
+
+
+

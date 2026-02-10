@@ -1,26 +1,29 @@
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
 
-<div class="page-width">
-  <h1 class="title title--primary">{{ section.settings.title | escape }}</h1>
-  {%- liquid
-    case section.settings.sort
-      when 'products_high', 'products_low'
-        assign collections = collections | sort: 'all_products_count'
-      when 'date', 'date_reversed'
-        assign collections = collections | sort: 'published_at'
-    endcase
+<div class="collection-hero grid_ pt-2 md:pt-3 mb-4 md:mb-6">
+  <div class="px-1 col-span-full col-start-1">
+    <h1 class="title title--primary">{{ section.settings.title | escape }}</h1>
+  </div>
+</div>
 
-    if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
-      assign collections = collections | reverse
-    endif
+{%- liquid
+  case section.settings.sort
+    when 'products_high', 'products_low'
+      assign collections = collections | sort: 'all_products_count'
+    when 'date', 'date_reversed'
+      assign collections = collections | sort: 'published_at'
+  endcase
 
-    assign moduloResult = 28 | modulo: section.settings.columns_desktop
-    assign paginate_by = 30
-    if moduloResult == 0
-      assign paginate_by = 28
-    endif
-  -%}
+  if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
+    assign collections = collections | reverse
+  endif
+
+  assign modulo_result = 28 | modulo: section.settings.columns_desktop
+  assign paginate_by = 30
+  if modulo_result == 0
+    assign paginate_by = 28
+  endif
+-%}
+  {% comment %} 
   {%- paginate collections by paginate_by -%}
     <ul
       class="collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
@@ -38,7 +41,36 @@
     </ul>
     {% render 'pagination', paginate: paginate %}
   {%- endpaginate -%}
+  {% endcomment %}
+
+<div class="product-grid-container" id="ProductGridContainer">
+  <div class="product_grid">
+    {%- paginate collections by paginate_by -%}
+      <ul id="product-grid">
+        {%- for collection in collections -%}
+          <li>
+            <a href="{{ collection.url }}" class="group block relative rounded md:w-CD3 bg-white/60 hover:bg-white transition-colors duration-320 ease-sysum overflow-hidden" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+              <div class="overflow-hidden rounded">
+                <picture>
+                  <source media="(max-width: 767px)" srcset="{{ collection.image | image_url: width: 256 }} 256w, {{ collection.image | image_url: width: 810 }} 810w" sizes="(min-width: 780px) calc(25vw - 22px), calc(100vw - 64px)">
+                  {{ collection.image | image_url: width: 2480 | image_tag: loading: 'lazy', widths: '256, 810, 1010, 1350', sizes: '(min-width: 780px) calc(25vw - 22px), calc(100vw - 64px)', class: 'group-hover:scale-[102%] transition-transform duration-[1920ms] ease-sysum' }}
+                </picture>
+              </div>
+              <div class="p-[0.875rem] font-sysum tracking-normal text-16 text-center leading-4">
+                {{ collection.title | escape }}
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
 </div>
+
+
+
+
 {% schema %}
 {
   "name": "t:sections.main-list-collections.name",

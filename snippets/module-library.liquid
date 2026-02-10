@@ -1,0 +1,85 @@
+{% comment %}
+  Renders module library loop for page-modules & main-article.
+  Accepts:
+  - source: {Object} page type.
+
+  Usage:
+  {% render 'module-library', source: source %}
+{% endcomment %}
+
+{% for section in source.metafields.custom.sections.value %}
+  {%- liquid 
+    if forloop.first 
+      assign lazy_load = 'eager'
+    else 
+      assign lazy_load = 'lazy'
+    endif
+    -%}
+  {% case section.type %}
+    {%- when 'content' -%}
+      <div class="grid_ my-8 md:my-10" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+        <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0" itemprop="articleBody">
+          {{ source.content }}
+        </div>
+      </div>
+    {% when 'text' %}
+      <div class="grid_ my-8 md:my-10" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+        <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0">
+          {{ section.text | metafield_tag }}
+        </div>
+      </div>
+    {% when 'hero-text' %}
+      <div class="grid_ my-8 md:my-10 h1" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+        <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0">
+          {{ section.text | metafield_tag }}
+        </div>
+      </div>
+    {% when 'quote' %}
+      <div class="grid_ my-8 md:my-10" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+        <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0 flex flex-col gap-1">
+          <q class="h1">{{ section.quote }}</q>
+          <span class="text-slate">— {{ section.subtext }}</span>
+        </div>
+      </div>
+    {% when 'image' %}
+      <div class="grid_ my-5">
+        <div class="col-span-full flex flex-col md:flex-row gap-1">
+          {% for block in section.image.value %}
+            <div class="grow relative" x-data="{open : false}" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+              {% render 'shop-block', object: block, number: forloop.length, lazy_load: lazy_load %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% when 'video' %}
+      {{ section.youtube_url | debug }}
+      {% assign image_height = section.cover_image.width | divided_by: section.cover_image.aspect_ratio %}
+      <div class="grid_ my-5" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+        <div class="col-start-1 col-span-full md:col-start-2 md:col-span-10 mx-2 md:mx-0" data-media-id="{% if section.youtube %}{{ section.youtube }}{% else %}{{ section.vimeo }}{% endif %}" x-data="{ cover: true }" >
+          <button class="block group relative w-full" type="button" aria-label="{{ 'sections.video.load_video' | t: description: section.description | escape }}" x-show="cover" @click="cover = !cover">
+            {{ section.cover_image | image_url: width: 2048 | image_tag: loading: lazy_load, width: section.cover_image.width, height: image_height, sizes: '(min-width: 780px) calc(83.33vw - 55px), calc(100vw - 48px)', widths: '285, 750, 1024, 1236, 1460, 1630, 1780, 1920, 2048' }}
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <svg class="control-play fill-sand/60 backdrop-blur-sm rounded-full w-5 md:w-6 transition-colors duration-320 ease-sysum group-hover:fill-sand/90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><title>Play</title>{% render 'icons' with 'control-play' %}</svg>
+            </div>
+          </button>
+          <div class="relative w-full h-0 pb-[56.25%]" x-show="!cover">
+            {%- if section.video -%}
+              {{ section.video.value | video_tag: image_size: '1100x', autoplay: true, loop: false, controls: true, muted: false }}
+            {%- elsif section.youtube -%}
+              <iframe src="https://www.youtube.com/embed/{{ section.youtube }}?enablejsapi=1&autoplay=1&loop=0&origin=http://sysumrunning.com&listType=user_uploads" class="js-youtube absolute w-full h-full" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.description | escape }}"></iframe>
+            {%- else -%}
+              <iframe src="https://player.vimeo.com/video/{{ section.vimeo }}?autoplay=1&loop=0&playlist={{ section.vimeo }}" class="js-vimeo absolute w-full h-full" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.description | escape }}"></iframe>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {% when 'audio' %}
+      <div class="grid_ my-8 md:my-10" x-intersect="$el.classList.add('scrollin', 'ease-sysum')">
+        <div class="col-span-full col-start-1 md:col-span-8 md:col-start-3 lg:col-span-6 lg:col-start-4 mx-1 md:mx-0">
+          <iframe src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ section.soundcloud }}&color=%23D7942E&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false" class="w-full h-[114px]" scrolling="no" frameborder="no" allow="autoplay"></iframe>
+        </div>
+      </div>
+    {% else %}
+      — No section type set —
+  {% endcase %}
+{% endfor %}

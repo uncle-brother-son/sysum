@@ -1,0 +1,61 @@
+{%- liquid
+    assign feature_gallery = product.metafields.custom.feature_gallery.value
+    assign slide_num =  feature_gallery.count
+-%}
+
+{% if feature_gallery %}  
+    <div class="block w-ful overflow-hidden relative" x-intersect="$el.classList.add('scrollleft', 'ease-sysum')">
+        <div class="ml-1 md:ml-CD1 md:pl-5 w-CM6 md:w-CD6 box-content"
+            x-data="slider({ slideCount: {{ slide_num }}, deskScroll: true, hasPadding: true })" 
+            x-ref="carouselView" 
+            x-init="sliderInit()"
+        >
+            <div x-ref="carouselItem" class="absolute h-0 w-CM6 md:w-CD6 md:pr-1 box-content">&nbsp;</div>
+            <ul class="flex gap-1 w-full transition-transform ease-linear transform-gpu cursor-grab"
+                x-ref="carousel"
+                @touchstart="press" @touchmove="slide" @touchend="release" @touchcancel="leave" @mousedown.prevent="press" @mousemove="slide" @mouseup="release" @mouseleave="leave" @click="click"  
+            >
+                {% for slide in feature_gallery %}            
+                    <li class="flex-1 bg-sand-wet relative">
+                        {%- liquid
+                            assign sizes = '(min-width: 780px) calc(50vw - 44px), calc(100vw - 32px)'
+                            assign image_height = slide.image.value.width | divided_by: slide.image.value.aspect_ratio
+                            assign widths = '496, 726, 1006, 1250, 1452, 1660, 1840, 2012, 2210, 2380, 2550, 2704'
+                        -%}
+
+                        {{ slide.image.value.src | image_url: width: slide.image.value.width | image_tag: alt: slide.image.value.alt, loading: 'lazy', width: slide.image.value.width, sizes: sizes, height: image_height, widths: widths }}
+                        {% if slide.image_dark %}
+                            <div class="absolute inset-0" x-data="{ hover: false }" @mouseover="hover = true" @mouseleave="hover = false">
+                                <div :class="hover ? 'opacity-100' : 'opacity-0'" class="transition-opacity duration-800">
+                                    {{ slide.image_dark.value.src | image_url: width: slide.image_dark.value.width | image_tag: alt: slide.image_dark.value.alt, loading: 'lazy', width: slide.image_dark.value.width, sizes: sizes, height: image_height, widths: widths }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </li> 
+                {% endfor %}
+            </ul>
+            <div class="mt-2 mr-1 relative transition-all duration-320 ease-out" 
+                x-data="{ 
+                    getContentHeight(value) {
+                        $nextTick(() => {
+                            const height = this.$refs[`content${value+1}`].offsetHeight;                    
+                            this.$refs.container.style.height = height + 'px';
+                        });
+                    }
+                }" 
+                x-init="getContentHeight(currentSlide), $watch('currentSlide', value => getContentHeight(value))"
+                x-ref="container"
+            >
+                {% for slide in feature_gallery %}
+                    <div class="absolute flex w-full gap-1"
+                        x-show="currentSlide === {{ forloop.index | minus: 1 }}"
+                        x-transition.opacity.duration.320ms
+                    > 
+                        <div class="grow text-14" x-ref="content{{ forloop.index }}">{{ slide.description.value }}</div>
+                        <div class="flex-none text-12 text-right w-CM1 md:w-CD1"><span x-text="currentSlide+1"></span> / <span x-text="slideCount"></span></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

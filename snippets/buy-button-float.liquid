@@ -1,0 +1,91 @@
+{% comment %}
+  Renders product buy-button-float.
+  Accepts:
+  - product: {Object} product object.
+  - product_form_id: {String} product form id.
+  - section_id: {String} id of section to which this snippet belongs.
+  - show_pickup_availability:: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+
+  Usage:
+  {% render 'buy-buttons', product: product, product_form_id: product_form_float_id, show_pickup_availability: true %}
+{% endcomment %}
+<div class="w-full">
+  {%- if product != blank -%}
+    <product-form class="product-form">
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <div class="product-form__error-message text-12 text-clay mb-2"></div>
+      </div>
+
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          disabled
+          class="product-variant-id"
+        >
+        <div class="product-form__buttons">
+          {%- liquid
+            assign check_against_inventory = true
+            if product.selected_or_first_available_variant.inventory_management != 'shopify' or  product.selected_or_first_available_variant.inventory_policy == 'continue'
+              assign check_against_inventory = false
+            endif
+            if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+              assign quantity_rule_soldout = true
+            endif
+
+            assign all_variants_in_stock = false
+            for variant in product.variants
+                if variant.available
+                    assign all_variants_in_stock = true
+                endif
+            endfor
+          -%}
+
+          <button
+            id="ProductSubmitButton-float-{{ section_id }}"
+            type="submit"
+            name="add"
+            class="w-full relative overflow-hidden primary {% if all_variants_in_stock == false %}soldOut{% endif %}"
+            {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+              disabled
+            {%- else -%}
+              x-on:openbag="showDrawer = true, drawerTab='bag', gift = false"
+            {% endif %}
+          >
+            <div>&nbsp;</div>
+            <span class="productCTA flex absolute justify-center items-center h-full top-0 left-0 right-0 transition duration-320 ease-sysum">
+              {%- if product.selected_or_first_available_variant.inventory_policy == 'continue' -%}
+                {{ 'products.product.pre_order' | t }}
+              {%- elsif all_variants_in_stock -%}
+                {{ 'products.product.add_to_cart' | t }}
+              {%- else -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+            </span>
+            <div class="loading__spinner hidden button-loader absolute justify-center items-center inset-0 bg-moss">
+              Adding…
+            </div>
+            <div class="selectSize flex absolute justify-center items-center h-full top-0 left-0 right-0 translate-y-full transition duration-320 ease-sysum cursor-pointer" onclick="window.location.href = '#CTA';">
+              {{ 'products.product.select_size' | t }}
+            </div>
+          </button>
+        </div>
+      {%- endform -%}
+    </product-form>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button type="submit" name="add" class="primary" disabled>
+          {{ 'products.product.sold_out' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
