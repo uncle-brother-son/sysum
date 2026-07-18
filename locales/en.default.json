@@ -267,6 +267,7 @@
         "returns_comment": "Which item(s) would you like to return/exchange?",
         "files": "Attach files",
         "send": "Send",
+        "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
         "contact_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
         "returns_success": "Thanks for contacting us regarding your return. We'll get back to you as soon as possible.",
         "error_heading": "Please revisit the following:"
