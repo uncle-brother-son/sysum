@@ -1,0 +1,494 @@
+---
+layout: none
+---
+# SYSUM - Complete Product Catalog & Information
+Last updated: {{ 'now' | date: '%Y-%m-%d' }}
+
+This is a comprehensive reference file for AI/LLM systems containing complete product information, specifications, and customer service details.
+
+## About SYSUM
+
+### Brand Story
+Born from a love of the rugged British wilderness, SYSUM inspires exploration and connection with the wild. We create premium technical trail running apparel designed for long-distance adventures and outdoor exploration.
+
+### Brand Values
+- Focus: Trail running, ultra-distance events, British wilderness exploration
+- Philosophy: Durability, sustainability, functional design
+- Manufacturing: Ethically produced in Portugal
+- Materials: Focus on durability (Cordura®), recycled components where possible
+- Ethos: Connection with nature, exploration, performance over fashion
+- Target Customer: Serious trail runners, ultra-distance athletes, wilderness adventurers
+- Price Positioning: Premium technical gear, accessible luxury performance wear
+
+### Manufacturing & Sustainability
+- Production Location: Portugal (ethical manufacturing)
+- Fabric Sourcing: France (low carbon impact energy)
+- Shipping to Warehouse: Land or boat only (no air freight)
+- Packaging: FSC-certified renewable wood fibers, recycled paper materials, 100% plastic-free, 100% recyclable
+- Philosophy: Durability prioritized over recyclability for longevity
+- Certifications: Responsible Wool Standard where applicable
+
+## Complete Product Catalog
+
+{%- for collection in collections -%}
+  {%- if collection.all_products_count > 0 and collection.handle != 'all' -%}
+
+### Collection: {{ collection.title }}
+{%- if collection.description != blank %}
+Description: {{ collection.description | strip_html }}
+{%- endif %}
+Total Products: {{ collection.all_products_count }}
+Collection URL: {{ shop.url }}{{ collection.url }}
+
+    {%- for product in collection.products -%}
+
+#### {{ product.title }}
+Price: {{ product.price | money }}
+      {%- if product.compare_at_price > product.price %}
+Regular Price: {{ product.compare_at_price | money }}
+Sale: Yes ({{ product.price | minus: product.compare_at_price | abs | money }} off)
+      {%- endif %}
+SKU: {{ product.selected_or_first_available_variant.sku }}
+Product Type: {{ product.type }}
+Vendor: {{ product.vendor }}
+      {%- if product.available %}
+Availability: In Stock
+      {%- else -%}
+        {%- if product.metafields.custom.preorder %}
+Availability: Preorder - {{ product.metafields.custom.preorder }}
+        {%- else %}
+Availability: Out of Stock
+        {%- endif -%}
+      {%- endif %}
+Product URL: {{ shop.url }}{{ product.url }}
+
+Description:
+{{ product.description | strip_html }}
+
+      {%- if product.metafields.custom.info.value -%}
+        {%- assign product_info = product.metafields.custom.info.value -%}
+
+Composition:
+        {%- for composition in product_info.composition.value -%}
+          {%- assign items = composition | split: "|" -%}
+- {{ items[0] }}: {{ items[1] }}
+        {%- endfor -%}
+
+        {%- if product_info.care.value.size > 0 -%}
+Care Instructions:
+          {%- assign care_array = 'washing,bleach,drying,dry-clean,iron' | split: "," -%}
+          {%- for care in product_info.care.value -%}
+            {%- assign info = care | split: "|" -%}
+- {{ care_array[forloop.index0] | capitalize }}: {{ info[1] }}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif %}
+
+Variants & Sizing:
+      {%- for variant in product.variants %}
+  - {{ variant.title }}: {{ variant.price | money }}
+        {%- if variant.sku != blank %} | SKU: {{ variant.sku }}{% endif %}
+        {%- if variant.available %} | Available{% else %} | Out of Stock{% endif %}
+        {%- if variant.weight > 0 %} | Weight: {{ variant.weight | weight_with_unit }}{% endif %}
+      {%- endfor %}
+
+      {%- if product.options_with_values.size > 0 -%}
+Options:
+        {%- for option in product.options_with_values %}
+  - {{ option.name }}: {{ option.values | join: ', ' }}
+        {%- endfor -%}
+      {%- endif %}
+
+      {%- if product.tags.size > 0 -%}
+Tags: {{ product.tags | join: ', ' }}
+      {%- endif %}
+
+      {%- if product.metafields.custom.related_categories -%}
+Related Categories: {{ product.metafields.custom.related_categories }}
+      {%- endif %}
+
+Images: {{ product.images.size }} product images available
+      {%- if product.featured_image %}
+Featured Image: {{ product.featured_image | image_url: width: 1000 }}
+      {%- endif %}
+
+---
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor %}
+
+## Detailed Delivery Information
+
+### UK Delivery Options
+
+{{ shop.metaobjects.info.delivery-info-uk.description | strip_html }}
+
+#### {{ shop.metaobjects.delivery.standard-uk.header }}
+Cost:
+{%- for row in shop.metaobjects.delivery.standard-uk.cost.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+Delivery Time:
+{%- for row in shop.metaobjects.delivery.standard-uk.duration.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+#### {{ shop.metaobjects.delivery.express-uk.header }}
+Cost:
+{%- for row in shop.metaobjects.delivery.express-uk.cost.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+Delivery Time:
+{%- for row in shop.metaobjects.delivery.express-uk.duration.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+### International Delivery Options
+
+{{ shop.metaobjects.info.delivery-info-worldwide.description | strip_html }}
+
+#### {{ shop.metaobjects.delivery.standard-worldwide.header }}
+Cost:
+{%- for row in shop.metaobjects.delivery.standard-worldwide.cost.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+Delivery Time:
+{%- for row in shop.metaobjects.delivery.standard-worldwide.duration.value -%}
+  {%- assign col = row | split: '|' -%}
+- {{ col[0] }}: {{ col[1] }}
+{%- endfor %}
+
+### Order Processing Details
+- Processing: Same working day (Monday-Friday, excluding UK bank holidays)
+- Orders placed over weekend/bank holidays: Processed next working day
+- Tracking: Sent via email once dispatched
+- Tracking Access: Available in customer account at {{ shop.url }}/account
+- Packaging: 100% recycled paper, no plastic, no printed delivery notes (digital only)
+
+### Customs Information
+- Applies to: Orders shipped outside the UK
+- Responsibility: Customer pays any customs fees, duties, or taxes
+- Payment: Due upon delivery
+- Notification: Shipping company will contact if customs charges apply
+- SYSUM Coverage: As a small business, we cannot cover these costs
+
+## Complete Returns & Refunds Policy
+
+### Return Eligibility
+- Time Period: 14 days from date of receipt
+- Condition Required: Unused, original condition and packaging
+- Purchase Source: Must be purchased directly from SYSUM
+- Excluded Items:
+  * Items not purchased directly from SYSUM
+  * Items returned after 14-day period
+  * Items not in original condition or packaging
+  * Gift cards
+  * Personalised or customised items (unless faulty or incorrect)
+
+### UK Return Process
+1. Fill out returns form on website: {{ shop.url }}/pages/returns
+2. Receive email with Royal Mail collection link
+3. Schedule collection or print label for post office drop-off
+4. Return item (FREE - no cost to customer)
+5. Refund processed within 10 working days of receipt
+
+### International Return Process
+1. Fill out returns form on website: {{ shop.url }}/pages/returns
+2. Receive email with return instructions
+3. Customer arranges and pays for return shipping
+4. Recommend tracked shipping service
+5. Items remain customer responsibility until received by SYSUM
+6. Refund processed within 10 working days of receipt
+
+### Refund Details
+- Refund Amount: Cost of items returned
+- Postage Refund: Only if items are faulty
+- Refund Method: Original payment method
+- Processing Time: Initiated within 10 working days
+- Bank Processing: May take additional time depending on bank
+
+### Exchange Process
+- Availability: Subject to stock availability
+- Request Method: Note desired exchange item in returns form
+- Processing: Exchange sent once return received and inspected
+- International: Customer covers return shipping, SYSUM covers exchange shipping
+
+### Cancellation Before Dispatch
+- Right to Cancel: Before order dispatched from warehouse
+- Refund: Full refund to original payment method
+- Processing Time: Within 10 working days
+- How to Cancel: Contact customer service immediately
+
+### Important Return Notes
+- Do NOT send items back without requesting return first
+- Unrequested returns will not be accepted
+- Items must pass inspection to qualify for refund
+- Faulty items eligible for full delivery cost compensation
+
+## Complete FAQ List
+
+{%- for faqList in shop.metaobjects.faqs_list.values %}
+
+### {{ faqList.header }}
+  {%- for item in faqList.group.value %}
+
+Q: {{ item.question | strip_html }}
+A: {{ item.answer | strip_html }}
+  {%- endfor -%}
+{%- endfor %}
+
+## Complete Size Guide
+
+{%- assign guides = 'women,men,socks,head,cap,scarf' | split: ',' -%}
+{%- for guide in guides -%}
+  {%- assign guide_data = shop.metaobjects.size_guide[guide] -%}
+  {%- if guide_data -%}
+
+### {{ guide_data.name }}
+    {%- if guide_data.description != blank %}
+Description: {{ guide_data.description }}
+    {%- endif %}
+
+Size Chart:
+    {%- for entry in guide_data.entry.value %}
+{{ entry.name }}: {{ entry.values.value | join: ', ' }}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor %}
+
+### How to Measure Your Body
+
+Chest / Bust:
+Measure around your body underneath your armpits keeping the tape measure horizontal.
+
+Waist:
+Measure around your waist just above the hips, close to your belly button keeping the tape measure horizontal.
+
+Hips:
+Measure around the fullest part of your hips keeping the tape measure horizontal.
+
+### Sizing Guidance
+- Standard: UK and US sizing standards
+- Between Sizes: We recommend selecting the larger size
+- Wool Garments: Especially important to size up if between sizes
+- Fit Information: Available in Size & Fit section of each product page
+- Model Information: Height and size worn provided on product pages
+- Assistance: Contact us for sizing help at {{ shop.url }}/pages/contact
+
+## Product Care Guidelines
+
+### General Care Instructions
+- Washing: Machine wash at 30°C
+- Bleaching: Do not bleach
+- Drying: Do not tumble dry
+- Dry Cleaning: Do not dry clean
+- Ironing: Iron inside out on low heat
+
+### Recommended Best Practice
+- Method: Hand wash when possible
+- Drying: Hang dry
+- Reason: Reduces microplastic release into oceans
+- Environmental Impact: Extends garment life, reduces energy use
+
+### Special Material Care
+- Merino Wool: Wash less frequently (naturally odor-resistant)
+- Cordura® Nylon: Durable but follow care instructions for longevity
+- Recycled Polyester: Standard care, avoid high heat
+
+## Payment Information
+
+### Accepted Payment Methods
+- Credit Cards: Visa, Mastercard, American Express
+- Digital Wallets: PayPal, ApplePay
+- Selection: Choose during checkout
+- Processing: Immediate secure processing
+
+### Payment Security
+- Technology: Shopify encryption (industry standard)
+- Storage: Payment information NOT stored on SYSUM servers after transaction
+- Compliance: PCI DSS compliant
+- Privacy: Full details in privacy policy at {{ shop.url }}/pages/privacy-policy
+
+## Account & Ordering Information
+
+### Account Benefits
+- Order Tracking: Real-time status updates
+- Order History: Access past purchases
+- Faster Checkout: Saved shipping information
+- Easy Returns: Streamlined return process
+- Not Required: Can checkout as guest
+
+### Order Status
+- With Account: Login at {{ shop.url }}/account
+- Without Account: Create account with order email to access
+- Automatic Linking: Past orders link when you create account with same email
+- Tracking: Available once order dispatched
+
+### Order Modifications
+- Changes: Cannot be made directly through website after placement
+- Contact: Email immediately if changes needed
+- Processing Speed: Orders processed same day, act quickly
+- Cancellation: Possible before dispatch (contact immediately)
+
+### Order Issues
+- Problems: Contact via {{ shop.url }}/pages/contact
+- Response Time: Same working day for inquiries Monday-Friday
+- Support: Happy to help with any ordering questions
+
+## Use Case & Product Recommendations
+
+### Long-Distance Trail Running
+Best For: Ultra marathons, multi-hour trail runs, mountain races
+Conditions: All-season capability
+Key Needs: Storage for nutrition, durability, anti-chafe, lightweight
+
+Recommended Products:
+{%- assign packer = collections['packer-system'] -%}
+{%- for product in packer.products %}
+- {{ product.title }} ({{ product.price | money }}): {{ product.description | strip_html | truncate: 200 }}
+{%- endfor %}
+
+### Cold Weather Running
+Best For: Winter training, cold morning starts, layering systems
+Conditions: -10°C to 10°C
+Key Needs: Temperature regulation, breathability, moisture management
+
+Recommended Products:
+{%- assign merino = collections['merino-thermo-layers'] -%}
+{%- for product in merino.products %}
+- {{ product.title }} ({{ product.price | money }}): {{ product.description | strip_html | truncate: 200 }}
+{%- endfor %}
+
+### Trail Running in Variable Conditions
+Best For: UK trail running, changeable weather, all-season training
+Conditions: -10°C to 30°C capability
+Key Needs: Versatility, quick-dry, weather resistance
+
+Recommended Products:
+- Packer System Shorts: Handle extreme temperature range
+- Merino Layers: Temperature regulation for layering
+- Accessories: Caps for sun, scarves for cold
+
+### Mountain & Fell Running
+Best For: Steep ascents, rough terrain, scrambling sections
+Conditions: Abrasion exposure, secure storage needed
+Key Needs: Durability, secure pockets, freedom of movement
+
+Recommended Products:
+- Cordura® Trail Shorts: 4x more abrasion-resistant than standard nylon
+- Secure pocket system: 7 pockets including zip options
+- Reflective details: For early starts and late finishes
+
+### Technical Specifications by Product Line
+
+#### Packer System Cordura® Trail Shorts
+- Fabric: 78 g/m², 4-way stretch Cordura® Nylon
+- Strength: 2x stronger than standard nylon
+- Abrasion Resistance: 4x more than standard nylon
+- Weight: 91g / 3.20oz (Men's size M), 78g (Women's size M)
+- Pockets: 7 total (2 Packer, 1 cargo, 1 phone, 1 key, 2 brief)
+- Construction: Laser-cut hems, bonded seams, gusset
+- Components: Recycled polyester waistband, drawcord, banding
+- Fabric Origin: France (ethically produced, low carbon energy)
+- Manufacturing: Portugal (ethical production)
+- Temperature Range: -10°C to 30°C
+- Conditions: Cold, wind, wet, hot capable
+- Inseam: Men's 4", Women's 3"
+- Reflective: Yes, integrated reflective details
+- Colors: Black, Sap
+
+#### Merino Thermo Layers
+- Material: Merino Wool
+- Properties: Temperature regulating, breathable, moisture-wicking, odor-resistant
+- Styles: Tee (short sleeve), Long Sleeve
+- Versions: Merino One (Pebble), Merino Two (Slate)
+- Manufacturing: Portugal (ethical production)
+- Care: Wash less frequently, naturally odor-resistant
+- Use: Base layer, standalone, layering system
+- Temperature Range: All-season capability
+- Benefits: Warm when cold, cool when warm
+- Sustainability: Responsible wool sourcing
+
+#### Woollen Crew Socks
+- Material: Wool blend
+- Height: Crew length
+- Colors: Moss, Clay, Slate
+- Price: £30
+- Benefits: Comfort, durability, moisture management
+- Use: Trail running, long-distance running, hiking
+
+#### Running Accessories
+- 6 Panel Mesh Running Cap: Breathable mesh, adjustable, reflective details
+- Merino Tube Scarf: Versatile neck warmer, merino wool, multi-use
+- Colors: Buttercup, Neutral options
+- Purpose: Weather protection, visibility, comfort
+
+## Contact & Customer Service
+
+Website: {{ shop.url }}
+{%- if shop.email %}
+Email: {{ shop.email }}
+{%- endif %}
+Contact Form: {{ shop.url }}/pages/contact
+Social Media:
+- Instagram: @sysumrunning
+- YouTube: @sysumrunning
+- Strava Club: SYSUM Running
+
+Customer Service Hours: Monday-Friday (UK time)
+Response Time: Same working day for inquiries
+Based: United Kingdom
+
+## Brand Philosophy & Story
+
+### Origin
+Born from a love of the rugged British wilderness, SYSUM was created to inspire exploration and connection with wild places. Our products are designed for runners who seek adventure beyond marked trails.
+
+### Design Inspiration
+- British wilderness: Moorlands, fells, mountains
+- Long-distance challenge: Ultra marathons, multi-day adventures
+- Functional minimalism: Every feature has purpose
+- Durability over disposability: Built to last
+
+### Target Customer
+- Serious trail runners
+- Ultra-distance athletes
+- Wilderness adventurers
+- Those who value quality over trends
+- Runners seeking connection with nature
+
+### Price & Value Positioning
+- Premium technical gear
+- Mid-to-high price point justified by:
+  * Superior materials (Cordura®, Merino)
+  * Ethical manufacturing (Portugal)
+  * Durability & longevity
+  * Functional innovation (Packer system)
+  * European quality standards
+
+### Competitive Positioning
+- More technical than: Mass-market running brands
+- More accessible than: Luxury performance brands
+- More durable than: Fast-fashion activewear
+- More trail-focused than: Road running specialists
+
+---
+
+This comprehensive catalog is generated dynamically from {{ shop.name }} product data.
+Last updated: {{ 'now' | date: '%Y-%m-%d %H:%M:%S' }}
+For the most current information, visit {{ shop.url }}
+For customer inquiries, visit {{ shop.url }}/pages/contact
+
+---
+Document Type: Complete Product Catalog & Information
+Intended Use: AI/LLM reference, customer service training, wholesale inquiries
+Format: Plain text, structured markdown
+Encoding: UTF-8

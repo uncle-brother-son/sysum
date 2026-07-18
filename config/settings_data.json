@@ -31,9 +31,9 @@
       "header": {
         "type": "header",
         "settings": {
-          "show_announcement": false,
-          "text": "Sign up and get 10% off",
-          "link": "#shopify-section-footer",
+          "show_announcement": true,
+          "text": "10% Off Any Second Merino Tee",
+          "link": "/collections/merino-thermo-layers",
           "menu_search": "menu_search"
         }
       },

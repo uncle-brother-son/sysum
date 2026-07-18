@@ -33,6 +33,9 @@
 
     {% render 'meta-tags' %}
 
+    {%- comment -%}LLM-readable site information for AI tools{%- endcomment -%}
+    <link rel="alternate" type="text/plain" href="{{ shop.url }}/pages/llms" title="LLM-readable site information">
+
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
