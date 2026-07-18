@@ -18,7 +18,7 @@
         x-ref="container1" :style="prodFeature == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''"
         >
           <div class="pt-2 pb-4">
-              <div class="col-start-1 col-span-6">
+              <div class="col-start-1 col-span-6 speakable-product-description">
                 {{ product.description }}
               </div>
           </div>
@@ -226,7 +226,7 @@
   </div>
   <div class="px-1 pt-5 col-span-full md:px-0 md:pt-0 md:col-start-9 md:col-span-3">
     <div class="sticky top-12">
-      <ul class="style-dash text-14" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
+      <ul class="style-dash text-14 speakable-product-features" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
         {% for feature in product_info.features.value %}
           {% assign list = feature | split: "|" %}
           <li>

@@ -56,6 +56,51 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ request.origin }}/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | json }},
+      "logo": "https://cdn.shopify.com/s/files/1/0472/7511/4664/files/sysum.png?v=1677885109",
+      "description": "Premium trail running apparel designed for long-distance mountain running. Technical gear engineered for durability, functionality, and performance.",
+      "sameAs": [
+        {%- if settings.social_instagram_link != blank -%}
+          {{ settings.social_instagram_link | json }}
+          {%- if settings.social_youtube_link != blank or settings.social_strava_link != blank or settings.social_facebook_link != blank -%},{%- endif -%}
+        {%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}
+          {{ settings.social_youtube_link | json }}
+          {%- if settings.social_strava_link != blank or settings.social_facebook_link != blank -%},{%- endif -%}
+        {%- endif -%}
+        {%- if settings.social_strava_link != blank -%}
+          {{ settings.social_strava_link | json }}
+          {%- if settings.social_facebook_link != blank -%},{%- endif -%}
+        {%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}
+          {{ settings.social_facebook_link | json }}
+        {%- endif -%}
+      ]
+    }
+    </script>
   </head>
 
   <body

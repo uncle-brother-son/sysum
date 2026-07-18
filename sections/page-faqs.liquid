@@ -16,7 +16,7 @@
                 <svg class="icon-plus absolute right-0 top-0.5 fill-black" :class="{ 'minus' : open }"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><title>Open/Close</title><g id="icon-plus-regular"><path d="M8.75 2H7.25L7.25 14H8.75V2Z"/><path d="M14 7.25L2 7.25V8.75H14V7.25Z"/></g></svg>
               </div>
               <div class="relative overflow-hidden transition-all max-h-0 duration-320 ease-sysum" x-ref="container" :style="open ? 'max-height: ' + $refs.container.scrollHeight + 'px' : ''">
-                <div class="pt-2 pb-4 pr-6">
+                <div class="pt-2 pb-4 pr-6 speakable-faq">
                   <p>{{ item.answer }}</p>
                 </div>
               </div>
@@ -28,6 +28,32 @@
 
   </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".speakable-faq"]
+  },
+  "mainEntity": [
+    {%- for faqList in shop.metaobjects.faqs_list.values -%}
+      {%- for item in faqList.group.value -%}
+        {
+          "@type": "Question",
+          "name": "{{ faqList.header }}: {{ item.question | strip_html }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ item.answer | strip_html | json }}
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+      {%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
 
 {% schema %}
 {

@@ -43,7 +43,7 @@
 
     <div class="flex-1 flex flex-col gap-5">
       <h2>How to measure</h2>
-      <div class="flex flex-col md:flex-row gap-1">
+      <div class="flex flex-col md:flex-row gap-1 speakable-sizing">
         <div class="flex-1 flex flex-col gap-5">
           {% assign list_num = shop.metaobjects.measurement_info.measurement-info.header.value.size %}
           {% for i in (1..list_num) %}
@@ -62,6 +62,33 @@
         
   </div>
 </div>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Measure Your Body for Trail Running Apparel",
+    "description": "Learn how to accurately measure your body to find the perfect size for SYSUM trail running gear.",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [".speakable-sizing"]
+    },
+    {%- if shop.metaobjects.measurement_info.measurement-info.image -%}
+      "image": {{ shop.metaobjects.measurement_info.measurement-info.image | image_url: width: 1200 | prepend: "https:" | json }},
+    {%- endif -%}
+    "step": [
+      {%- assign list_num = shop.metaobjects.measurement_info.measurement-info.header.value.size -%}
+      {%- for i in (1..list_num) -%}
+        {%- assign index = i | minus: 1 -%}
+        {
+          "@type": "HowToStep",
+          "name": {{ shop.metaobjects.measurement_info.measurement-info.header.value[index] | json }},
+          "text": {{ shop.metaobjects.measurement_info.measurement-info.description.value[index] | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
 
 {% schema %}
 {

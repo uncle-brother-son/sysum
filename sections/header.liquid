@@ -443,41 +443,6 @@
   </div>
 </div>
 
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org",
-    "@type": "Organization",
-    "name": {{ shop.name | json }},
-    "logo": "https://cdn.shopify.com/s/files/1/0472/7511/4664/files/sysum.png?v=1677885109",
-    "sameAs": [
-      {{ settings.social_instagram_link | json }},
-      {{ settings.social_facebook_link | json }},
-      {{ settings.social_tiktok_link | json }},
-      {{ settings.social_youtube_link | json }},
-      {{ settings.social_soundcloud_link | json }},
-      {{ settings.social_strava_link | json }}      
-    ],
-    "url": {{ request.origin | append: page.url | json }}
-  }
-</script>
-
-{%- if request.page_type == 'index' -%}
-  {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "WebSite",
-      "name": {{ shop.name | json }},
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {{ potential_action_target | json }},
-        "query-input": "required name=search_term_string"
-      },
-      "url": {{ request.origin | append: page.url | json }}
-    }
-  </script>
-{%- endif -%}
-
 {%- if template == "index" or template == "collection" or template == "search" or template == "product" or template == "blog" or template == "article" -%}
   {%- if section.settings.show_announcement -%}
     {%- if section.settings.text != blank -%}

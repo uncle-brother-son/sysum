@@ -51,7 +51,7 @@
                         x-show="currentSlide === {{ forloop.index | minus: 1 }}"
                         x-transition.opacity.duration.320ms
                     > 
-                        <div class="grow text-14" x-ref="content{{ forloop.index }}">{{ slide.description.value }}</div>
+                        <div class="grow text-14 speakable-functional-features" x-ref="content{{ forloop.index }}">{{ slide.description.value }}</div>
                         <div class="flex-none text-12 text-right w-CM1 md:w-CD1"><span x-text="currentSlide+1"></span> / <span x-text="slideCount"></span></div>
                     </div>
                 {% endfor %}

@@ -165,6 +165,10 @@
         ],
       {%- endif %}
       "description": {{ product.description | strip_html | json }},
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".speakable-product-description", ".speakable-product-features", ".speakable-functional-features"]
+      },
       {% if product.selected_or_first_available_variant.sku != blank -%}
         "sku": {{ product.selected_or_first_available_variant.sku | json }},
       {%- endif %}
@@ -172,6 +176,107 @@
         "@type": "Brand",
         "name": {{ product.vendor | json }}
       },
+      {%- comment -%} Enhanced: Material from composition metafield (extract actual fabric) {%- endcomment -%}
+      {%- if product.metafields.custom.info.value.composition.value -%}
+        {%- assign first_comp = product.metafields.custom.info.value.composition.value | first | split: '|' -%}
+        {%- if first_comp.size > 1 -%}
+          {%- assign comp_value = first_comp[1] | split: '%' -%}
+          {%- if comp_value.size > 1 -%}
+            {%- assign fabric_name = comp_value[1] | split: '/' | first | strip -%}
+            "material": {{ fabric_name | json }},
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- comment -%} Enhanced: Category mapping {%- endcomment -%}
+      {%- if product.type != blank -%}
+        "category": "Sporting Goods > Outdoor Recreation > Trail Running > {{ product.type }}",
+      {%- endif -%}
+      {%- comment -%} Enhanced: Audience from tags {%- endcomment -%}
+      {%- assign gender = '' -%}
+      {%- if product.tags contains 'Men' -%}
+        {%- assign gender = 'male' -%}
+      {%- elsif product.tags contains 'Women' -%}
+        {%- assign gender = 'female' -%}
+      {%- elsif product.tags contains 'Unisex' -%}
+        {%- assign gender = 'unisex' -%}
+      {%- endif -%}
+      {%- if gender != '' -%}
+        "audience": {
+          "@type": "PeopleAudience",
+          "suggestedGender": {{ gender | json }},
+          "suggestedMinAge": 18
+        },
+      {%- endif -%}
+      {%- comment -%} Enhanced: Additional properties - dynamically pulled from metafields {%- endcomment -%}
+      "additionalProperty": [
+        {%- comment -%} Features from metafields {%- endcomment -%}
+        {%- if product.metafields.custom.info.value.features.value -%}
+          {%- for feature in product.metafields.custom.info.value.features.value -%}
+            {
+              "@type": "PropertyValue",
+              "name": "Feature",
+              "value": {{ feature | json }}
+            },
+          {%- endfor -%}
+        {%- endif -%}
+        {%- comment -%} Functional features from feature gallery metafield {%- endcomment -%}
+        {%- if product.metafields.custom.feature_gallery.value -%}
+          {%- for functional_feature in product.metafields.custom.feature_gallery.value -%}
+            {%- if functional_feature.description -%}
+              {
+                "@type": "PropertyValue",
+                "name": "Functional Feature",
+                "value": {{ functional_feature.description.value | json }}
+              },
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- comment -%} Composition breakdown from metafields {%- endcomment -%}
+        {%- if product.metafields.custom.info.value.composition.value -%}
+          {%- for composition in product.metafields.custom.info.value.composition.value -%}
+            {%- assign comp_parts = composition | split: '|' -%}
+            {
+              "@type": "PropertyValue",
+              "name": {{ comp_parts[0] | json }},
+              "value": {{ comp_parts[1] | json }}
+            },
+          {%- endfor -%}
+        {%- endif -%}
+        {%- comment -%} Weight from metafields {%- endcomment -%}
+        {%- if product.metafields.custom.info.value.weight -%}
+          {
+            "@type": "PropertyValue",
+            "name": "Weight",
+            "value": {{ product.metafields.custom.info.value.weight | json }}
+          },
+        {%- endif -%}
+        {%- comment -%} Production location from metafields {%- endcomment -%}
+        {%- if product.metafields.custom.info.value.production -%}
+          {
+            "@type": "PropertyValue",
+            "name": "Production Location",
+            "value": {{ product.metafields.custom.info.value.production | json }}
+          },
+        {%- endif -%}
+        {%- comment -%} Responsibility from metafields (product-specific sustainability) {%- endcomment -%}
+        {%- if product.metafields.custom.info.value.responsibility.value -%}
+          {%- for responsibility in product.metafields.custom.info.value.responsibility.value -%}
+            {%- assign resp_parts = responsibility | split: '|' -%}
+            {
+              "@type": "PropertyValue",
+              "name": "Sustainability: {{ resp_parts[0] }}",
+              "value": {{ resp_parts[1] | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        {%- endif -%}
+      ],
+      {%- comment -%} Future: Aggregate rating (uncomment when Junip reviews are live)
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "24"
+      },
+      {%- endcomment -%}
       "offers": [
         {%- for variant in product.variants -%}
           {
@@ -191,9 +296,109 @@
             "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
             "price" : {{ variant.price | divided_by: 100.00 | json }},
             "priceCurrency" : {{ cart.currency.iso_code | json }},
-            "url" : {{ request.origin | append: variant.url | json }}
+            "url" : {{ request.origin | append: variant.url | json }},
+            {%- comment -%} UK Delivery - Parse from metaobjects {%- endcomment -%}
+            {%- if shop.metaobjects.delivery.standard-uk -%}
+              {%- assign uk_cost_row = shop.metaobjects.delivery.standard-uk.cost.value | first | split: '|' -%}
+              {%- assign uk_cost_value = uk_cost_row[1] | downcase -%}
+              {%- assign uk_duration_row = shop.metaobjects.delivery.standard-uk.duration.value | first | split: '|' -%}
+              {%- assign uk_duration_range = uk_duration_row[1] | split: ' ' | first | split: '-' -%}
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": {% if uk_cost_value contains 'free' %}"0"{% else %}{{ uk_cost_row[1] | remove: '£' | strip | json }}{% endif %},
+                  "currency": "GBP"
+                },
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "GB"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                  }
+                  {%- if uk_duration_range.size == 2 -%}
+                    ,"transitTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": {{ uk_duration_range[0] }},
+                      "maxValue": {{ uk_duration_range[1] }},
+                      "unitCode": "DAY"
+                    }
+                  {%- endif -%}
+                }
+              },
+            {%- endif -%}
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "GB",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14,
+              "returnMethod": "https://schema.org/ReturnByMail",
+              "returnFees": "https://schema.org/FreeReturn"
+            }
           }{% unless forloop.last %},{% endunless %}
         {%- endfor -%}
+      ]
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ request.origin | json }}
+        }
+        {%- liquid
+          if product.metafields.custom.primary_collection != blank
+            assign breadcrumb_collection = product.metafields.custom.primary_collection.value
+          elsif product.collections.size > 0
+            assign breadcrumb_collection = product.collections.first
+          else
+            assign breadcrumb_collection = null
+          endif
+        -%}
+        {%- if breadcrumb_collection -%}
+          {%- liquid
+            assign dept = breadcrumb_collection.title | split: "'" | first
+            assign category = breadcrumb_collection.title | split: " " | last
+          -%}
+          {%- if category != "Clothing" and dept == 'Women' or dept == 'Men' -%}
+            ,{
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{ dept }}'s Clothing",
+              "item": "{{ request.origin }}/collections/{{ dept | downcase | append: 's' }}-running-clothing"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": {{ breadcrumb_collection.title | replace: "Men's ", "" | replace: "Women's ", "" | json }},
+              "item": {{ request.origin | append: breadcrumb_collection.url | json }}
+            }
+          {%- else -%}
+            ,{
+              "@type": "ListItem",
+              "position": 2,
+              "name": {{ breadcrumb_collection.title | json }},
+              "item": {{ request.origin | append: breadcrumb_collection.url | json }}
+            }
+          {%- endif -%}
+        {%- endif -%}
+        ,{
+          "@type": "ListItem",
+          "position": {% if breadcrumb_collection %}{% if category != "Clothing" and dept == 'Women' or dept == 'Men' %}4{% else %}3{% endif %}{% else %}2{% endif %},
+          "name": {{ product.title | json }}
+        }
       ]
     }
   </script>

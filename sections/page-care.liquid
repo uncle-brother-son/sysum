@@ -2,9 +2,56 @@
   {% render 'sticky-nav' %}
   <div class="flex flex-col gap-10 col-span-full md:col-start-4 md:col-span-7 mx-1 md:mx-0 md:pt-3" x-intersect="$el.classList.add('scrollfadein', 'ease-sysum')">
       <h1>{{ page.title | escape }}</h1>
-      {{ page.content }}
+      <div class="speakable-care">
+        {{ page.content }}
+      </div>
   </div>
 </div>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Care for Trail Running Apparel",
+    "description": "Proper care instructions for SYSUM trail running gear to maintain quality, performance, and reduce environmental impact.",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [".speakable-care"]
+    },
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Hand Washing (Recommended)",
+        "text": "We recommend hand washing and hang drying to help prolong the lifespan of your product and reduce the amount of microplastics entering the oceans. Wear them under a waterfall or jump into a fresh stream, or take them in the shower with you."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Machine Washing (Alternative)",
+        "text": "If you choose to machine wash, use a gentle cycle at 30°C. We recommend using a Guppyfriend washing bag or similar microfibre filter to reduce fibre shedding and protect the water from microplastic pollution. Use non-bio detergent (non bleach)."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Bleaching",
+        "text": "Do not bleach. Bleach damages fabric fibers and affects breathability and moisture-wicking properties of technical fabrics."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Drying",
+        "text": "Air dry only. Hang or lay flat to dry away from direct heat and sunlight. Do not tumble dry as heat can damage fabric elasticity and technical properties."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Ironing",
+        "text": "Do not iron. High heat can damage synthetic fabrics. If absolutely needed, use the lowest heat setting with a protective cloth."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Merino Care",
+        "text": "Merino wool naturally resists odor-causing bacteria and stays fresher for longer. You can wear garments multiple times before washing. For multi-day adventures, simply rinse in fresh water and hang to air dry overnight."
+      }
+    ]
+  }
+</script>
 
 {% schema %}
 {
